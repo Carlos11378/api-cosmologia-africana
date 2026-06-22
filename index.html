@@ -1,8 +1,4 @@
-
-# Criar um index.html COMPLETO com todos os dados embutidos (site estático)
-# Isso funciona no Netlify sem precisar de servidor Node.js
-
-html = '''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -110,6 +106,7 @@ html = '''<!DOCTYPE html>
         .stats { text-align: center; padding: 15px; color: #aaa; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; }
         .no-results { text-align: center; padding: 30px; color: #ff6b6b; }
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="container">
@@ -147,7 +144,7 @@ html = '''<!DOCTYPE html>
                 <span class="tag" onclick="buscarTag('Swahili')">Swahili</span>
                 <span class="tag" onclick="buscarTag('Kikongo')">Kikongo</span>
                 <span class="tag" onclick="buscarTag('Adinkra')">Adinkra</span>
-                <span class="tag" onclick="buscarTag('Ge\'ez')">Ge'ez</span>
+                <span class="tag" onclick="buscarTag('Ge'ez')">Ge'ez</span>
                 <span class="tag" onclick="buscarTag('Nsibidi')">Nsibidi</span>
             </div>
         </div>
@@ -182,7 +179,7 @@ html = '''<!DOCTYPE html>
         // ═══════════════════════════════════════════════════════════════════
         //  DADOS EMBUTIDOS — FUNCIONA EM QUALQUER LUGAR (Netlify, GitHub Pages, etc.)
         // ═══════════════════════════════════════════════════════════════════
-        
+
         const dados = {
             conceitos: [
                 { nome: "Ubuntu", tradicao: "Bantu (Sul da África)", descricao: "Princípio ético-ontológico: 'Eu sou porque nós somos'. A pessoa se constitui na comunidade." },
@@ -308,8 +305,8 @@ html = '''<!DOCTYPE html>
                 { nome: "Léopold Sédar Senghor", tradicao: "Senegal", descricao: "Poeta e fundador do movimento Negritude. Primeiro presidente do Senegal." },
                 { nome: "Wole Soyinka", tradicao: "Nigéria", descricao: "Dramaturgo e Prêmio Nobel de Literatura. Obra: 'A Dança da Floresta'." },
                 { nome: "Nei Lopes", tradicao: "Brasil", descricao: "Escritor, compositor e pesquisador da cultura afro-brasileira. Especialista em Candomblé e sincretismo." },
-                { nome: "Marcien Towa", tradicao: "Camarões", descricao: "Filósofo africano que desenvolveu uma epistemologia africana crítica. Obra: 'Essai sur la problématique philosophique dans l\'Afrique actuelle'." },
-                { nome: "Bunseki Fu-Kiau", tradicao: "RDC / Kongo", descricao: "Antropólogo e sábio kongo. Obra: 'N\'Kongo Ye Nza Yakun\'zungidila' (O Kongo e a sua Doutrina)." },
+                { nome: "Marcien Towa", tradicao: "Camarões", descricao: "Filósofo africano que desenvolveu uma epistemologia africana crítica. Obra: 'Essai sur la problématique philosophique dans l'Afrique actuelle'." },
+                { nome: "Bunseki Fu-Kiau", tradicao: "RDC / Kongo", descricao: "Antropólogo e sábio kongo. Obra: 'N'Kongo Ye Nza Yakun'zungidila' (O Kongo e a sua Doutrina)." },
                 { nome: "Théophile Obenga", tradicao: "Gabão", descricao: "Historiador e linguista. Especialista em Egito antigo e línguas africanas. Colaborador de Cheikh Anta Diop." },
                 { nome: "Paulu Gerdes", tradicao: "Moçambique", descricao: "Matemático que descobriu a geometria africana em cestarias, desenhos na areia e arquitetura." },
                 { nome: "Luiz Antonio Simas", tradicao: "Brasil", descricao: "Historiador e pesquisador da cultura afro-brasileira. Especialista em Candomblé, umbanda e sincretismo." },
@@ -373,7 +370,7 @@ html = '''<!DOCTYPE html>
         // ═══════════════════════════════════════════════════════════════════
         //  FUNÇÕES DE PESQUISA (TUDO LOCAL, SEM SERVIDOR)
         // ═══════════════════════════════════════════════════════════════════
-        
+
         function pesquisar() {
             const termo = document.getElementById('termo').value.trim().toLowerCase();
             if (!termo) return;
@@ -462,22 +459,3 @@ html = '''<!DOCTYPE html>
     </script>
 </body>
 </html>
-'''
-
-# Salvar o arquivo
-with open('/mnt/agents/output/index.html', 'w', encoding='utf-8') as f:
-    f.write(html)
-
-print("✅ index.html ESTATICO criado com sucesso!")
-print(f"📁 Tamanho: {len(html)} caracteres")
-print("\n🎯 Este arquivo funciona em QUALQUER lugar:")
-print("   - Netlify")
-print("   - GitHub Pages")
-print("   - Abrir direto no navegador")
-print("   - Celular, tablet, qualquer dispositivo")
-print("\n❌ Não precisa mais de:")
-print("   - Servidor Node.js")
-print("   - localhost:3000")
-print("   - .bat")
-print("   - cmd aberto")
-
