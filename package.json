@@ -1,0 +1,29 @@
+{
+  "name": "api-cosmologia-africana",
+  "version": "3.0.0",
+  "description": "API de Pesquisa Academica sobre Cosmologia Africana com Interface Web - Inkices, Linguas e Escritas",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "cosmologia",
+    "africana",
+    "bantu",
+    "ubuntu",
+    "api",
+    "pesquisa",
+    "inkices",
+    "candomble",
+    "angola"
+  ],
+  "author": "",
+  "license": "MIT"
+}
