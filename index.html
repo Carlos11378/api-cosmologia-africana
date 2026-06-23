@@ -1,461 +1,747 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa Académica - Cosmologia Africana</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-            color: #e0e0e0;
-            padding: 20px;
-        }
-        .container { max-width: 900px; margin: 0 auto; }
-        h1 {
-            text-align: center;
-            color: #e94560;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        h1::before { content: "🔮 "; }
-        .search-box {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(233, 69, 96, 0.3);
-        }
-        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        input[type="text"] {
-            flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #e94560;
-            border-radius: 30px;
-            background: rgba(0,0,0,0.3);
-            color: #fff;
-            font-size: 1.1rem;
-            outline: none;
-        }
-        input[type="text"]::placeholder { color: #888; }
-        button {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(45deg, #e94560, #ff6b6b);
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
-        }
-        .tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .tag {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: rgba(233, 69, 96, 0.2);
-            border: 1px solid #e94560;
-            color: #e94560;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-        .tag:hover { background: #e94560; color: white; }
-        .resultados { margin-top: 30px; }
-        .card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid #e94560;
-            transition: all 0.3s;
-        }
-        .card:hover { transform: translateX(5px); background: rgba(255,255,255,0.1); }
-        .card h3 { color: #e94560; margin-bottom: 8px; font-size: 1.3rem; }
-        .card .tradicao { color: #aaa; font-size: 0.9rem; margin-bottom: 10px; }
-        .card .descricao { line-height: 1.6; color: #ddd; }
-        .card .categoria-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 15px;
-            background: rgba(233, 69, 96, 0.2);
-            color: #e94560;
-            font-size: 0.8rem;
-            margin-top: 10px;
-        }
-        .loading { text-align: center; padding: 40px; color: #e94560; font-size: 1.2rem; }
-        .info { text-align: center; padding: 20px; color: #888; font-size: 0.9rem; }
-        .categorias { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
-        .categoria-btn {
-            padding: 10px 20px;
-            border-radius: 25px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: #e0e0e0;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.85rem;
-        }
-        .categoria-btn:hover, .categoria-btn.ativo { background: #e94560; border-color: #e94560; color: white; }
-        .stats { text-align: center; padding: 15px; color: #aaa; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; }
-        .no-results { text-align: center; padding: 30px; color: #ff6b6b; }
-    </style>
-<base target="_blank">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas & Pesquisa Académica — Cosmologia Africana</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-0: #0a0a0f;
+    --bg-1: #11121a;
+    --bg-2: #181a26;
+    --line: #262838;
+    --line-2: #353850;
+    --text: #f0ece0;
+    --text-2: #b6b1a0;
+    --text-3: #6b6a60;
+    --accent: #e94560;
+    --accent-2: #ff6b6b;
+    --gold: #c9a14a;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: radial-gradient(ellipse at top, #161826 0%, #0a0a0f 60%);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  header {
+    text-align: center;
+    padding: 3rem 1.5rem 1.5rem;
+    max-width: 980px;
+    margin: 0 auto;
+    border-bottom: 0.5px solid var(--line);
+  }
+  .eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.75rem; }
+  h1 {
+    font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+    font-weight: 600; line-height: 1.15; margin-bottom: 0.6rem;
+    background: linear-gradient(135deg, #f0ece0 0%, var(--gold) 60%, var(--accent) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .subtitle { font-size: 0.95rem; color: var(--text-2); max-width: 680px; margin: 0 auto; line-height: 1.65; }
+  main { max-width: 1040px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+  .search-box {
+    margin-top: 2rem; display: flex; gap: 8px; padding: 8px;
+    background: var(--bg-1); border: 0.5px solid var(--line); border-radius: 14px;
+  }
+  .search-box input {
+    flex: 1; background: transparent; border: none; padding: 14px 16px;
+    color: var(--text); font-size: 1rem; font-family: inherit; outline: none;
+  }
+  .search-box input::placeholder { color: var(--text-3); }
+  .search-box button {
+    padding: 0 22px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: white; border: none; border-radius: 9px; font-weight: 600; font-size: 0.95rem;
+    cursor: pointer; transition: transform .15s;
+  }
+  .search-box button:hover { transform: scale(1.03); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 1rem 0 0.5rem; }
+  .tag {
+    padding: 5px 11px; border-radius: 18px; background: rgba(233,69,96,0.08);
+    border: 0.5px solid rgba(233,69,96,0.35); color: var(--accent);
+    cursor: pointer; font-size: 0.77rem; transition: all .15s;
+  }
+  .tag:hover { background: var(--accent); color: white; }
+  .tabs {
+    display: flex; flex-wrap: wrap; gap: 4px; margin: 2rem 0 1.25rem;
+    border-bottom: 0.5px solid var(--line); padding-bottom: 0;
+  }
+  .tab {
+    padding: 9px 15px; background: transparent; border: none; color: var(--text-3);
+    cursor: pointer; font-size: 0.87rem; font-weight: 500; font-family: inherit;
+    border-bottom: 2px solid transparent; margin-bottom: -0.5px; transition: all .15s;
+  }
+  .tab:hover { color: var(--text-2); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+  .filter-btn {
+    font-size: 0.78rem; font-weight: 500; padding: 5px 13px;
+    border: 0.5px solid var(--line-2); border-radius: 20px;
+    background: transparent; color: var(--text-2); cursor: pointer; font-family: inherit; transition: all .15s;
+  }
+  .filter-btn:hover { background: var(--bg-2); color: var(--text); }
+  .filter-btn.active { background: var(--bg-2); border-color: #666; color: var(--text); }
+  .count-bar { font-size: 0.85rem; color: var(--text-3); padding: 0.25rem 0 1rem; }
+  .card-text {
+    background: var(--bg-1); border: 0.5px solid var(--line);
+    border-left: 3px solid var(--accent); border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 10px; transition: all .15s;
+  }
+  .card-text:hover { background: var(--bg-2); border-left-color: var(--gold); }
+  .card-text h3 { color: var(--text); font-size: 1.05rem; font-weight: 600; margin-bottom: 5px; }
+  .card-text .meta { color: var(--text-3); font-size: 0.8rem; margin-bottom: 7px; }
+  .card-text .desc { color: var(--text-2); font-size: 0.9rem; line-height: 1.65; }
+  .card-text .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 12px;
+    background: rgba(233,69,96,0.12); color: var(--accent);
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 10px; margin-right: 6px;
+  }
+  .card-text .extra { font-size: 0.82rem; color: var(--text-3); margin-top: 6px; font-style: italic; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .card-v {
+    background: var(--bg-1); border: 0.5px solid var(--line);
+    border-radius: 12px; overflow: hidden; cursor: pointer; transition: all .15s;
+  }
+  .card-v:hover { border-color: #444; }
+  .card-v.expanded { border-color: #555; grid-column: span 2; }
+  .card-v .img { width: 100%; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; padding: 1.25rem; overflow: hidden; }
+  .card-v .img img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+  .card-v .body { padding: 1rem; border-top: 0.5px solid var(--line); }
+  .card-v .tag2 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .card-v .name { font-size: 0.95rem; font-weight: 500; margin-bottom: 3px; color: var(--text); }
+  .card-v .origin { font-size: 0.8rem; color: var(--text-3); }
+  .card-v .detail { margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--line); display: none; }
+  .card-v.expanded .detail { display: block; }
+  .card-v .def { font-size: 0.85rem; color: var(--text-2); line-height: 1.7; margin-bottom: 8px; }
+  .card-v .cite { font-size: 0.75rem; color: var(--text-3); font-style: italic; }
+  .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; }
+  .cat-card {
+    background: var(--bg-1); border: 0.5px solid var(--line); border-radius: 10px;
+    padding: 18px 14px; text-align: center; cursor: pointer; transition: all .15s;
+  }
+  .cat-card:hover { background: var(--bg-2); border-color: var(--accent); transform: translateY(-2px); }
+  .cat-card .icon { font-size: 1.7rem; margin-bottom: 6px; }
+  .cat-card .label { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text); }
+  .cat-card .count { font-size: 0.7rem; color: var(--text-3); margin-top: 4px; }
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--text-3); }
+  .empty .big { font-size: 2rem; margin-bottom: 8px; }
+  .empty p { font-size: 0.95rem; }
+  .view { display: none; }
+  .view.active { display: block; }
+  footer { text-align: center; padding: 2rem 1rem; color: var(--text-3); font-size: 0.78rem; border-top: 0.5px solid var(--line); }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .card-v.expanded { grid-column: span 1; }
+    .tab { padding: 9px 10px; font-size: 0.8rem; }
+    h1 { font-size: 1.6rem; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>PESQUISA ACADÉMICA COM IA</h1>
 
-        <div class="search-box">
-            <div class="input-group">
-                <input type="text" id="termo" placeholder="Digite um tema (ex: bantu, mandombe, ubuntu, maat, aluvaia...)" value="">
-                <button onclick="pesquisar()">PESQUISAR</button>
-            </div>
+<header>
+  <p class="eyebrow">🔮 Atlas Simbólico · Pesquisa Académica</p>
+  <h1>Cosmologias, Símbolos & Tradições Africanas</h1>
+  <p class="subtitle">
+    Mapeamento enciclopédico de sistemas simbólicos africanos e afro-diaspóricos — Bantu, Iorubá, Jeje, Ketu, Inkices, Kemet, Maat, Nsibidi, Umbanda, Jurema.
+    Pesquise, filtre e explore 350+ conceitos, divindades, símbolos, línguas, autores, arquétipos, escritas e entidades.
+  </p>
+</header>
 
-            <div class="tags">
-                <span class="tag" onclick="buscarTag('Bantu')">Bantu</span>
-                <span class="tag" onclick="buscarTag('Ubuntu')">Ubuntu</span>
-                <span class="tag" onclick="buscarTag('Mandombe')">Mandombe</span>
-                <span class="tag" onclick="buscarTag('Dikenga')">Dikenga</span>
-                <span class="tag" onclick="buscarTag('Maat')">Maat</span>
-                <span class="tag" onclick="buscarTag('Sankofa')">Sankofa</span>
-                <span class="tag" onclick="buscarTag('Kalunga')">Kalunga</span>
-                <span class="tag" onclick="buscarTag('Asé')">Asé</span>
-                <span class="tag" onclick="buscarTag('Nkisi')">Nkisi</span>
-                <span class="tag" onclick="buscarTag('Aluvaiá')">Aluvaiá</span>
-                <span class="tag" onclick="buscarTag('Matamba')">Matamba</span>
-                <span class="tag" onclick="buscarTag('Katendê')">Katendê</span>
-                <span class="tag" onclick="buscarTag('Zaze')">Zaze</span>
-                <span class="tag" onclick="buscarTag('Fogo')">Fogo</span>
-                <span class="tag" onclick="buscarTag('Água')">Água</span>
-                <span class="tag" onclick="buscarTag('Serpente')">Serpente</span>
-                <span class="tag" onclick="buscarTag('Cheikh Anta Diop')">Cheikh Anta Diop</span>
-                <span class="tag" onclick="buscarTag('Jung')">Jung</span>
-                <span class="tag" onclick="buscarTag('Bachelard')">Bachelard</span>
-                <span class="tag" onclick="buscarTag('Egito')">Egito</span>
-                <span class="tag" onclick="buscarTag('Kongo')">Kongo</span>
-                <span class="tag" onclick="buscarTag('Yoruba')">Yoruba</span>
-                <span class="tag" onclick="buscarTag('Swahili')">Swahili</span>
-                <span class="tag" onclick="buscarTag('Kikongo')">Kikongo</span>
-                <span class="tag" onclick="buscarTag('Adinkra')">Adinkra</span>
-                <span class="tag" onclick="buscarTag('Ge'ez')">Ge'ez</span>
-                <span class="tag" onclick="buscarTag('Nsibidi')">Nsibidi</span>
-            </div>
-        </div>
+<main>
+  <div class="search-box">
+    <input type="search" id="termo" placeholder="Digite um tema (ex: bantu, ubuntu, maat, aluvaiá, orixá, preto velho, jurema...)" autocomplete="off">
+    <button onclick="pesquisar()">PESQUISAR</button>
+  </div>
 
-        <div id="resultados" class="resultados">
-            <div class="info">
-                Digite um termo acima ou clique em uma tag para pesquisar.<br>
-                <small>200+ itens catalogados em 11 categorias</small>
-            </div>
-        </div>
+  <div class="tags" id="tags-container"></div>
 
-        <div class="categorias">
-            <button class="categoria-btn" onclick="listarCategoria('conceitos')">CONCEITOS</button>
-            <button class="categoria-btn" onclick="listarCategoria('divindades')">DIVINDADES</button>
-            <button class="categoria-btn" onclick="listarCategoria('inkices')">INKICES</button>
-            <button class="categoria-btn" onclick="listarCategoria('cosmogonias')">COSMOGONIAS</button>
-            <button class="categoria-btn" onclick="listarCategoria('ritos')">RITOS</button>
-            <button class="categoria-btn" onclick="listarCategoria('civilizacoes')">CIVILIZAÇÕES</button>
-            <button class="categoria-btn" onclick="listarCategoria('linguas')">LÍNGUAS</button>
-            <button class="categoria-btn" onclick="listarCategoria('escritas')">ESCRITAS</button>
-            <button class="categoria-btn" onclick="listarCategoria('autores')">AUTORES</button>
-            <button class="categoria-btn" onclick="listarCategoria('arquetipos')">ARQUÉTIPOS</button>
-            <button class="categoria-btn" onclick="listarCategoria('livros')">LIVROS</button>
-        </div>
+  <div class="tabs">
+    <button class="tab active" data-view="pesquisa">📚 Pesquisa</button>
+    <button class="tab" data-view="atlas">🎨 Atlas Visual</button>
+    <button class="tab" data-view="categorias">📂 Categorias</button>
+  </div>
 
-        <div class="stats">
-            📚 API Cosmologia Africana v3.0 — 11 categorias — 200+ itens catalogados — Inkices, Línguas e Escritas com exemplos
-        </div>
+  <div class="view active" id="view-pesquisa">
+    <div id="resultados-pesquisa" class="empty">
+      <div class="big">🔍</div>
+      <p>Digite um termo ou clique em uma tag.<br><small>350+ itens em 16 categorias</small></p>
     </div>
+  </div>
 
-    <script>
-        // ═══════════════════════════════════════════════════════════════════
-        //  DADOS EMBUTIDOS — FUNCIONA EM QUALQUER LUGAR (Netlify, GitHub Pages, etc.)
-        // ═══════════════════════════════════════════════════════════════════
+  <div class="view" id="view-atlas">
+    <div class="filter-bar" id="atlas-filters"></div>
+    <div class="count-bar" id="atlas-count"></div>
+    <div class="grid" id="atlas-grid"></div>
+  </div>
 
-        const dados = {
-            conceitos: [
-                { nome: "Ubuntu", tradicao: "Bantu (Sul da África)", descricao: "Princípio ético-ontológico: 'Eu sou porque nós somos'. A pessoa se constitui na comunidade." },
-                { nome: "Zamani e Sasa", tradicao: "Bantu / John Mbiti", descricao: "Concepção de tempo dividida entre o passado profundo coletivo (Zamani) e o presente vivido (Sasa)." },
-                { nome: "Ntu, Kintu, Hantu, Kuntu, Bintu", tradicao: "Bantu / Placide Tempels", descricao: "As quatro categorias fundamentais do ser na filosofia bantu (Força Vital)." },
-                { nome: "Kalunga", tradicao: "Bakongo", descricao: "Linha/fronteira cosmológica entre o mundo dos vivos e o mundo dos ancestrais." },
-                { nome: "Dikenga", tradicao: "Bakongo", descricao: "Cosmograma em cruz que representa o ciclo de vida-morte-renascimento." },
-                { nome: "Ngozi e Amadlozi", tradicao: "Zulu", descricao: "Espíritos ancestrais que medeiam entre os vivos e o Criador." },
-                { nome: "Ma'at", tradicao: "Egito Antigo / Kemetic", descricao: "Princípio de ordem cósmica, justiça e equilíbrio. A verdade que sustenta o universo." },
-                { nome: "Ka e Ba", tradicao: "Egito Antigo", descricao: "Ka = força vital, energia que anima o corpo. Ba = personalidade, alma que viaja após a morte." },
-                { nome: "Nommo", tradicao: "Dogon", descricao: "Força criadora da palavra falada — a palavra que cria a realidade." },
-                { nome: "Asé", tradicao: "Yoruba / Candomblé", descricao: "Força vital, energia sagrada que sustenta toda a existência. Substância que se acumula, transmite e alimenta." },
-                { nome: "Heka", tradicao: "Egito Antigo", descricao: "Magia como força criadora e palavra de poder. A capacidade de transformar a realidade." },
-                { nome: "Sankofa", tradicao: "Akan / Gana", descricao: "Princípio de retornar ao passado para buscar o que foi deixado para trás. 'Não é vergonha voltar atrás para buscar o que se esqueceu'." },
-                { nome: "Mandombe", tradicao: "Kikongo / Wabeladio Payi", descricao: "Sistema de escrita sagrada inspirado pelos espíritos ancestrais. Cada letra representa uma força cósmica." },
-                { nome: "Tempo Circular", tradicao: "Cosmologia Africana", descricao: "O tempo não é linear — é espiral, cíclico, vivo. Os ancestrais retornam através dos descendentes; os mitos não pertencem ao passado, mas ao eterno presente." },
-                { nome: "Axé", tradicao: "Yoruba / Candomblé / Umbanda", descricao: "Força vital, energia sagrada que sustenta toda a existência. Presente nas ervas, pedras, água, sangue, palavras e pessoas iniciadas. O terreiro existe para cultivar e distribuir axé." },
-                { nome: "Nkisi", tradicao: "Kongo / Angola", descricao: "Objeto sagrado carregado de força espiritual. Cada nkisi contém substâncias específicas que canalizam poderes de cura, proteção ou justiça." }
-            ],
-            divindades: [
-                { nome: "Olorun / Olodumare", tradicao: "Yoruba / Nagô", descricao: "Deus supremo, criador do universo." },
-                { nome: "Nyame", tradicao: "Akan / Gana", descricao: "Deus supremo que se retirou após a criação." },
-                { nome: "Amma", tradicao: "Dogon", descricao: "Deus criador que fez o mundo a partir de um ovo cósmico." },
-                { nome: "Unkulunkulu", tradicao: "Zulu", descricao: "O Primeiro, ancestral primordial e criador." },
-                { nome: "Rá", tradicao: "Egito Antigo", descricao: "Deus do sol, criador e fonte de toda a vida. O faraó era considerado filho de Rá." },
-                { nome: "Ísis", tradicao: "Egito Antigo", descricao: "Deusa mãe e poderosa protetora mágica. Senhora da magia, do amor e da fertilidade." },
-                { nome: "Osíris", tradicao: "Egito Antigo", descricao: "Deus da morte, ressurreição e fertilidade. Juiz dos mortos no além." },
-                { nome: "Hórus", tradicao: "Egito Antigo", descricao: "Divindade da realeza e do céu. Representado como falcão ou homem com cabeça de falcão." },
-                { nome: "Thoth", tradicao: "Egito Antigo", descricao: "Deus da sabedoria, da escrita e da magia. Inventou a escrita hieroglífica." },
-                { nome: "Apedemak", tradicao: "Reino de Cuxe / Núbia", descricao: "Deus-leão da guerra e da fertilidade. Principal divindade do Reino de Cuxe." },
-                { nome: "Iemanjá", tradicao: "Yoruba / Candomblé", descricao: "Mãe das águas do mar. Senhora da maternidade, proteção e amor incondicional." },
-                { nome: "Oxum", tradicao: "Yoruba / Candomblé", descricao: "Senhora das águas doces, do amor, da fertilidade e da beleza." },
-                { nome: "Nanã Buruku", tradicao: "Fon / Candomblé", descricao: "Senhora da terra e da lama primordial. A mais ancestral das orixás." },
-                { nome: "Xangô", tradicao: "Yoruba / Candomblé", descricao: "Orixá do fogo, do trovão e da justiça. Senhor do raio e do ferro." },
-                { nome: "Ogum", tradicao: "Yoruba / Candomblé", descricao: "Orixá da guerra, do ferro e da forja. Quem abre caminhos com o facão." },
-                { nome: "Oxóssi", tradicao: "Yoruba / Candomblé", descricao: "Orixá da caça, da fartura e do conhecimento da floresta." },
-                { nome: "Oxumaré", tradicao: "Yoruba / Candomblé", descricao: "Orixá da serpente arco-íris, princípio da renovação e da riqueza." },
-                { nome: "Exu / Elegba", tradicao: "Yoruba / Candomblé", descricao: "Senhor dos caminhos e encruzilhadas. Guardião do limiar, primeiro a ser saudado." },
-                { nome: "Iansã / Oyá", tradicao: "Yoruba / Candomblé", descricao: "Orixá dos ventos, tempestades e raios. Senhora das mudanças radicais." },
-                { nome: "Iroko", tradicao: "Yoruba / Candomblé", descricao: "Orixá da árvore gameleira, do tempo, da justiça e dos ancestrais." },
-                { nome: "Ossaim", tradicao: "Yoruba / Candomblé", descricao: "Senhor das folhas sagradas e do conhecimento que mora na árvore." },
-                { nome: "Loko", tradicao: "Candomblé de Angola", descricao: "Divindade da clareza, da sabedoria e da justiça. Associado ao sol e à luz." },
-                { nome: "Katendê", tradicao: "Candomblé de Angola", descricao: "Nkisi das folhas sagradas e da mata fechada. O saber que existe antes da linguagem." },
-                { nome: "Nzambi", tradicao: "Bantu / Angola", descricao: "Deus criador supremo. O sol (ntangu) é sinal da sua presença." }
-            ],
-            inkices: [
-                { nome: "Aluvaiá", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Senhor das encruzilhadas e dos limites entre mundos. Nenhuma cerimônia Angola começa sem sua licença. Guardião da fronteira entre o humano e o sagrado, entre o tempo ordinário e o tempo ritual. Elemento: Terra. Cor: Preto e vermelho." },
-                { nome: "Mukumbi — Inkosi", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Nkisi da realeza espiritual — não do poder político, mas da autoridade que emana do alinhamento com os ancestrais. Governa a liderança, a hierarquia sagrada e a transmissão do conhecimento de geração em geração. Elemento: Ar e terra. Cor: Branco e dourado." },
-                { nome: "Mutakalambô", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Senhor absoluto da floresta densa — o mato fechado onde a civilização não chega e onde os espíritos habitam livremente. Governa os animais, a caça, os segredos da mata, as plantas de poder. Elemento: Terra e vegetação. Cor: Verde escuro e preto." },
-                { nome: "Katendê", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Guardião do conhecimento das plantas — o Nkisi que sabe o segredo de cada folha, raiz e casca. Governa a fitoterapia sagrada, os banhos rituais, as defumações e os preparos de cura. Elemento: Vegetação e água. Cor: Verde e amarelo." },
-                { nome: "Kawungo", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Governa o território onde a vida e a morte se tocam — a doença como limiar, como passagem. Governa a cura pelo conhecimento da morte: é preciso conhecer o que mata para saber o que cura. Elemento: Terra e osso. Cor: Branco e preto." },
-                { nome: "Angorô", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "A serpente arco-íris — mediadora entre o mundo celeste e o mundo terrestre. Governa a diplomacia, a mediação, a tradução entre mundos e entre linguagens. O arco-íris como renovação depois da tempestade. Elemento: Água e ar. Cor: Todas as cores do arco-íris." },
-                { nome: "Zaze", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Nkisi do raio e da justiça divina — a força que desce do céu com poder absoluto. Governa a justiça, o julgamento, a punição dos que rompem as leis sagradas. O fogo purificador que transforma. Elemento: Fogo e ar. Cor: Vermelho, branco e dourado." },
-                { nome: "Kitembu", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Governa o vento e o tempo mítico dos ancestrais. A memória ancestral que chega como vento — as vozes dos que partiram que sussurram no ouvido dos que ficaram. O arquivo vivo da tradição. Elemento: Ar. Cor: Roxo e branco." },
-                { nome: "Matamba", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Rainha guerreira — figura histórica e mítica. Governa a guerra sagrada, a proteção do povo e da tradição, a resistência à opressão. O Nkisi das mulheres que lideram, que protegem, que não recuam. Elemento: Vento e fogo. Cor: Roxo, preto e vermelho." },
-                { nome: "Dandalunda", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Senhora das águas doces — rios, lagos, cachoeiras. Governa o amor, a fertilidade, a beleza e a cura pelas águas. A água que cura não pela violência da purificação mas pela gentileza da nutrição. Elemento: Água doce. Cor: Azul claro, rosa e branco." },
-                { nome: "Kaitumba", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Governa as águas salgadas e profundas — o mar como Kalunga, como fronteira entre o mundo dos vivos e o mundo dos ancestrais. Guarda o que foi perdido no fundo do mar e o que foi preservado apesar de tudo. Elemento: Água salgada. Cor: Azul profundo e preto." },
-                { nome: "Zumbarandá", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Nkisi dos ancestrais mais antigos — tão antigos que já não têm nome individual, já se tornaram força pura. Governa a velhice sagrada, a sabedoria que só o tempo acumula, o respeito pelos que vieram antes. Elemento: Terra e osso. Cor: Branco e preto." },
-                { nome: "Wuji", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Nkisi do céu e da criação primordial — a força que estava antes de tudo e da qual tudo emergiu. Governa a criação, o cosmos, os grandes ciclos do tempo. O princípio antes da diferenciação. Elemento: Ar e éter. Cor: Azul celeste e dourado." },
-                { nome: "Lembaranganga", tradicao: "Candomblé de Angola / Bantu-Kongo", descricao: "Protege o momento mais vulnerável da existência: o nascimento. O recém-nascido é um ancestral que voltou, e precisa de proteção especial nessa travessia de volta. Governa a proteção das crianças, das gestantes e dos recém-chegados. Elemento: Água e terra. Cor: Branco e azul claro." },
-                { nome: "Mesa Jurema Sagrada — Caboclo", tradicao: "Candomblé de Angola / Brasil", descricao: "O ponto onde a tradição Angola toca o Brasil profundo — onde os Inkices africanos encontram os espíritos indígenas da floresta brasileira. Governa a síntese, o encontro de tradições, a sabedoria da floresta brasileira. Elemento: Terra, vegetação e fogo. Cor: Verde, vermelho e amarelo." }
-            ],
-            cosmogonias: [
-                { nome: "Obatala cria a Terra", tradicao: "Yoruba", descricao: "Obatala desce do céu com uma corrente de areia para formar o mundo seco." },
-                { nome: "Ovo Cósmico de Amma", tradicao: "Dogon", descricao: "Amma cria o universo a partir de um ovo que se rompe em oito fragmentos." },
-                { nome: "Criação de Unkulunkulu", tradicao: "Zulu", descricao: "Nasceu da junco e trouxe humanidade, medicina, fogo e agricultura." },
-                { nome: "O Nilo como Deus Hapi", tradicao: "Egito Antigo", descricao: "O Nilo é o deus Hapi, dador de vida. Suas cheias anuais traziam fertilidade ao deserto." },
-                { nome: "O Sol como Rá", tradicao: "Egito Antigo", descricao: "Rá cria o mundo com sua luz. O faraó é filho de Rá, mediador entre deuses e humanos." },
-                { nome: "Osiris, Ísis e Hórus", tradicao: "Egito Antigo", descricao: "Osíris é morto, ressuscitado por Ísis, e Hórus vinga seu pai. Modelo de morte e ressurreição." },
-                { nome: "Kalunga como Fronteira", tradicao: "Bakongo", descricao: "O mundo é dividido pelo Kalunga — a água que separa e conecta vivos e mortos." },
-                { nome: "Dikenga como Ciclo Cósmico", tradicao: "Bakongo", descricao: "O cosmograma em cruz representa os quatro momentos do sol: nascimento, meio-dia, pôr do sol, meia-noite." }
-            ],
-            ritos: [
-                { nome: "Candomblé", tradicao: "Yoruba / Brasil", descricao: "Ritual de possessão e comunicação com orixás. Toque de atabaques, dança e oferendas." },
-                { nome: "Vodun", tradicao: "Fon / Benin / Haiti", descricao: "Culto aos deuses e ancestrais com transe e oferendas. Tambor como portal entre mundos." },
-                { nome: "Iniciação Elima", tradicao: "Bantu", descricao: "Rito de passagem feminino com dança e educação sexual." },
-                { nome: "Kimpa Vita", tradicao: "Kongo", descricao: "Movimento messiânico liderado por Beatriz Kimpa Vita." },
-                { nome: "Toque de Atabaques", tradicao: "Candomblé / Brasil", descricao: "Os três tambores sagrados (Rum, Rumpi, Lé) convocam os Orixás. O toque abre o portal entre os mundos." },
-                { nome: "Culto dos Egunguns", tradicao: "Yoruba", descricao: "Culto dos ancestrais mascarados. Os mortos retornam para falar com os vivos." },
-                { nome: "Rito de Passagem Bantu", tradicao: "Bantu", descricao: "Iniciação que marca a transição da infância para a vida adulta. Ubuntu se faz ao redor do tambor." }
-            ],
-            civilizacoes: [
-                { nome: "Grande Zimbabwe", tradicao: "Shona", descricao: "Civilização medieval com muralhas de pedra e comércio de ouro." },
-                { nome: "Império do Kongo", tradicao: "Kongo", descricao: "Reino central-africano com 500 anos de história." },
-                { nome: "Egito Antigo", tradicao: "Kemetic", descricao: "Civilização do Nilo com cosmologia e matemática avançadas. Pirâmides, hieróglifos e filosofia." },
-                { nome: "Axum", tradicao: "Etíope", descricao: "Reino com obeliscos e cristianismo antigo." },
-                { nome: "Reino de Cuxe", tradicao: "Núbia", descricao: "Reino africano que dominou o Egito como a 25ª Dinastia Núbia. Centro de ferro e ouro." },
-                { nome: "Dinastias Núbias", tradicao: "Núbia / Sudão", descricao: "Reinos de Napata e Meroé. Conquistaram o Egito e preservaram a cultura kemetic." },
-                { nome: "Reino de Mali", tradicao: "Mali", descricao: "Grande império do Oeste Africano. Mansa Musa, a peregrinação a Meca e a Universidade de Timbuktu." },
-                { nome: "Reino de Benin", tradicao: "Edo / Nigéria", descricao: "Civilização conhecida pelas bronzes de Benin, sistema de muralhas e arte sofisticada." }
-            ],
-            linguas: [
-                { nome: "Árabe", tradicao: "África do Norte / Sahel", descricao: "Língua semítica introduzida no Norte da África no século VII. Tornou-se língua de comércio, religião e cultura em grande parte do continente. Exemplo: 'السلام عليكم' (As-salamu alaykum) = 'A paz esteja contigo'." },
-                { nome: "Chokwe (Tchokwe)", tradicao: "Angola / RDC / Zâmbia", descricao: "Língua bantu falada pelos povos Tchokwe, conhecidos pela arte, máscaras e mitologia. Exemplo: 'Mukishi' = espírito ancestral / máscara ritual." },
-                { nome: "Kassanje", tradicao: "Angola", descricao: "Língua bantu do centro-norte de Angola. Falada na região do rio Kassanje, importante centro cultural e histórico." },
-                { nome: "Kikongo", tradicao: "Kongo / Angola / RDC / Gabão", descricao: "Língua bantu falada em Angola, Congo e Gabão. Base do Mandombe. Exemplo: 'Kalunga' = mar / fronteira entre mundos. 'Nza' = mundo / terra." },
-                { nome: "Kimbundo", tradicao: "Angola", descricao: "Língua bantu do norte de Angola. Língua dos antigos reinos do Ndongo e Matamba. Exemplo: 'Nzambi' = Deus criador. 'Mbanza' = cidade / capital." },
-                { nome: "Lingala", tradicao: "RDC / Congo", descricao: "Língua bantu falada em Kinshasa e Brazzaville. Língua da música congolesa (soukous, rumba). Exemplo: 'Mobali' = homem. 'Mwasi' = mulher." },
-                { nome: "Ngangela / Ganguela", tradicao: "Angola / Zâmbia", descricao: "Grupo de línguas bantu do sudeste de Angola. Faladas pelos povos Ngangela, conhecidos pela tradição oral e cosmologia." },
-                { nome: "Swahili", tradicao: "África Oriental", descricao: "Língua franca do Leste Africano. Mistura de bantu com árabe, português e inglês. Exemplo: 'Jambo' = olá. 'Asante' = obrigado. 'Hakuna matata' = sem problemas." },
-                { nome: "Umbundo", tradicao: "Angola", descricao: "Língua bantu falada no centro de Angola (Benguela, Huambo, Kuito). Uma das línguas mais faladas do país. Exemplo: 'Ombembua' = ancestral. 'Ondumbo' = força vital." },
-                { nome: "Yoruba", tradicao: "Yoruba / Nigéria / Benin", descricao: "Língua tonal falada na Nigéria e Benin. Língua sagrada do Candomblé e do Ifá. Exemplo: 'Ase' = força vital. 'Ori' = cabeça / destino." },
-                { nome: "Akan / Twi", tradicao: "Akan / Gana", descricao: "Língua do Gana com provérbios e sabedoria oral rica. Exemplo: 'Sankofa' = volte e busque. 'Obra' = trabalho / criação." },
-                { nome: "Wolof", tradicao: "Wolof / Senegal", descricao: "Língua principal do Senegal com poesia oral rica. Exemplo: 'Ndam' = paz. 'Jàmm' = tranquilidade." },
-                { nome: "Zulu", tradicao: "Zulu / África do Sul", descricao: "Língua bantu com rica tradição oral e conceitos filosóficos profundos. Exemplo: 'Ubuntu' = eu sou porque nós somos. 'Sawubona' = eu te vejo." },
-                { nome: "Ge'ez", tradicao: "Etiópia / Eritreia", descricao: "Língua semítica antiga usada na liturgia cristã etíope. Base do alfabeto Ge'ez. Exemplo: 'ሰላም' (Selam) = paz. 'አምላክ' (Amlak) = Deus." }
-            ],
-            escritas: [
-                { nome: "Adinkra", tradicao: "Akan / Gana", descricao: "Símbolos estampados em tecidos com significados filosóficos. Cada símbolo carrega um provérbio. Exemplos: 'Gye Nyame' (𓀀) = exceto Deus (supremacia divina). 'Sankofa' (𓀁) = volte e busque. 'Dwennimmen' (𓀂) = chifres de carneiro = humildade e força." },
-                { nome: "Ge'ez", tradicao: "Etiópia / Eritreia", descricao: "Alfabeto semítico usado na liturgia cristã etíope. Um dos mais antigos do mundo. 26 letras básicas, cada uma com 7 formas. Exemplos: 'ሀ' (Ha) = som de 'h'. 'ለ' (La) = som de 'l'. 'መ' (Ma) = som de 'm'. 'ሰላም' = paz. 'አምላክ' = Deus." },
-                { nome: "Kassanje", tradicao: "Angola", descricao: "Sistema de registro simbólico da região do rio Kassanje. Combina elementos pictográficos com marcas de identidade étnica e territorial. Usado em rituais de passagem e acordos comunitários." },
-                { nome: "Hieróglifos Egípcios", tradicao: "Egito Antigo", descricao: "Sistema de escrita sagrada usado em monumentos e textos religiosos. Milhares de símbolos. Exemplos: '𓂀' (Wedjat) = olho de Hórus / proteção. '𓋹' (Ankh) = vida eterna. '𓁹' (Irt) = olho / ver. '𓆣' = escaravelho / transformação." },
-                { nome: "Mandombe", tradicao: "Kikongo / Wabeladio Payi", descricao: "Sistema de escrita sagrada inspirado pelos espíritos ancestrais em 1978. Cada letra representa uma força cósmica. Baseada em formas de 5 e 2. Exemplos: '𐒀' (Ma) = som de 'm'. '𐒁' (Na) = som de 'n'. '𐒂' (Sa) = som de 's'. 'Kalunga' escrito em Mandombe: 𐒀𐒁𐒂𐒃." },
-                { nome: "Nsibidi", tradicao: "Ekpe / Igbo / Nigéria", descricao: "Sistema de escrita ideográfico do sudeste da Nigéria. Usado em rituais secretos da sociedade Ekpe. Milhares de símbolos. Exemplos: '𑗊' = amor / união. '𑗋' = discurso / palavra. '𑗌' = guerra / conflito. '𑗍' = paz / reconciliação." },
-                { nome: "Sona", tradicao: "Lunda / Tchokwe / Angola", descricao: "Sistema de escrita em linhas e pontos usado para registrar história e sabedoria. Desenhos feitos na areia ou em objetos. Cada figura conta uma história. Exemplos: 'Ciclo da vida' = linha contínua que se cruza formando padrões. 'Árvore genealógica' = ramificações que partem de um centro." },
-                { nome: "Tifinagh", tradicao: "Tuareg / Berbere / Saara", descricao: "Alfabeto usado pelos povos tuareg do Saara. Símbolos de grande beleza geométrica. 55 letras básicas. Exemplos: 'ⴰ' (Ya) = som de 'a'. 'ⴱ' (Yab) = som de 'b'. 'ⴳ' (Yag) = som de 'g'. 'ⵜⴰⵎⴰⵣⵉⵖⵜ' (Tamaziɣt) = língua berbere." },
-                { nome: "Vai", tradicao: "Vai / Libéria / Serra Leoa", descricao: "Sistema de escrita silábica criado por Momolu Duwalu Bukele em 1833. Uma das poucas escritas africanas indígenas. 200+ sílabas. Exemplos: 'ꔀ' (E) = som de 'e'. 'ꔤ' (I) = som de 'i'. 'ꕆ' (O) = som de 'o'. 'ꕉ' (U) = som de 'u'." }
-            ],
-            autores: [
-                { nome: "Cheikh Anta Diop", tradicao: "Senegal", descricao: "Historiador e físico que provou a origem africana do Egito antigo. Obra: 'Nations nègres et culture'." },
-                { nome: "Placide Tempels", tradicao: "Bélgica / Congo", descricao: "Missionário que sistematizou a filosofia bantu em 'La philosophie bantoue' (1945)." },
-                { nome: "John S. Mbiti", tradicao: "Quênia", descricao: "Teólogo que estudou conceitos africanos de tempo e religião. Obra: 'African Religions and Philosophy'." },
-                { nome: "Léopold Sédar Senghor", tradicao: "Senegal", descricao: "Poeta e fundador do movimento Negritude. Primeiro presidente do Senegal." },
-                { nome: "Wole Soyinka", tradicao: "Nigéria", descricao: "Dramaturgo e Prêmio Nobel de Literatura. Obra: 'A Dança da Floresta'." },
-                { nome: "Nei Lopes", tradicao: "Brasil", descricao: "Escritor, compositor e pesquisador da cultura afro-brasileira. Especialista em Candomblé e sincretismo." },
-                { nome: "Marcien Towa", tradicao: "Camarões", descricao: "Filósofo africano que desenvolveu uma epistemologia africana crítica. Obra: 'Essai sur la problématique philosophique dans l'Afrique actuelle'." },
-                { nome: "Bunseki Fu-Kiau", tradicao: "RDC / Kongo", descricao: "Antropólogo e sábio kongo. Obra: 'N'Kongo Ye Nza Yakun'zungidila' (O Kongo e a sua Doutrina)." },
-                { nome: "Théophile Obenga", tradicao: "Gabão", descricao: "Historiador e linguista. Especialista em Egito antigo e línguas africanas. Colaborador de Cheikh Anta Diop." },
-                { nome: "Paulu Gerdes", tradicao: "Moçambique", descricao: "Matemático que descobriu a geometria africana em cestarias, desenhos na areia e arquitetura." },
-                { nome: "Luiz Antonio Simas", tradicao: "Brasil", descricao: "Historiador e pesquisador da cultura afro-brasileira. Especialista em Candomblé, umbanda e sincretismo." },
-                { nome: "Luiz Rufino", tradicao: "Brasil", descricao: "Pesquisador e escritor sobre religiosidade afro-brasileira e cosmologia bantu." },
-                { nome: "José Beniste", tradicao: "Brasil", descricao: "Pesquisador de Candomblé e umbanda. Especialista em liturgia e simbologia afro-brasileira." },
-                { nome: "Pierre Verger", tradicao: "França / Brasil", descricao: "Fotógrafo e etnógrafo. Documentou o Candomblé e as religiões afro-brasileiras por décadas." },
-                { nome: "Juana Elbein dos Santos", tradicao: "Brasil", descricao: "Antropóloga e especialista em Candomblé de Angola. Obra: 'Os Nagô e a Morte'." },
-                { nome: "Robert Farris Thompson", tradicao: "EUA", descricao: "Historiador da arte africana e afro-americana. Obra: 'Flash of the Spirit'." },
-                { nome: "Molefi Kete Asante", tradicao: "EUA / Gana", descricao: "Fundador do Afrocentrismo acadêmico. Obra: 'The Afrocentric Idea'." },
-                { nome: "Ivan Van Sertima", tradicao: "Guiana / Reino Unido", descricao: "Historiador. Obra: 'They Came Before Columbus' — sobre contatos africanos pré-colombianos." },
-                { nome: "Runoko Rashidi", tradicao: "EUA", descricao: "Historiador e antropólogo. Especialista em história africana global e diáspora." },
-                { nome: "Sophie Oluwole", tradicao: "Nigéria", descricao: "Filósofa yoruba. Especialista em Ifá e filosofia africana comparada com a grega." },
-                { nome: "Kwasi Wiredu", tradicao: "Gana", descricao: "Filósofo africano. Defendeu uma filosofia africana sem colonialismo epistêmico. Obra: 'Philosophy and an African Culture'." },
-                { nome: "Wabeladio Payi", tradicao: "RDC / Kongo", descricao: "Criador da escrita Mandombe. Recebeu a inspiração dos espíritos ancestrais em 1978." },
-                { nome: "Gaston Bachelard", tradicao: "França", descricao: "Filósofo da imaginação material. Obras: 'A Psicanálise do Fogo', 'A Água e os Sonhos', 'A Terra e os Devaneios do Repouso'." },
-                { nome: "Gilbert Durand", tradicao: "França", descricao: "Antropólogo do imaginário. Obra: 'As Estruturas Antropológicas do Imaginário'." },
-                { nome: "Carl Gustav Jung", tradicao: "Suíça", descricao: "Psiquiatra e fundador da psicologia analítica. Conceitos: inconsciente coletivo, arquétipos, individuação. Obra: 'O Homem e seus Símbolos'." }
-            ],
-            arquetipos: [
-                { nome: "Fogo", tradicao: "Universal / Candomblé / Alquimia", descricao: "Arquétipo da transformação ativa. Elemento de Xangô e Ogum. Simboliza purificação, paixão, criatividade e destruição. Quatro estados: centelha, fogueira, incêndio, brasa." },
-                { nome: "Água", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo do inconsciente, da origem e da renovação. Domínio de Iemanjá, Oxum e Nanã. Portal entre vivos e ancestrais. Quatro estados: parada, corrente, mar, chuva." },
-                { nome: "Serpente", tradicao: "Universal / Yoruba / Egito / Hinduísmo", descricao: "Arquétipo da transformação pelo despojamento. Oxumaré (arco-íris serpentiforme), Uraeus (Egito), Kundalini (Hinduísmo). Ciclo de morte e renascimento no mesmo corpo." },
-                { nome: "Tambor", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo da convocação. Atabaques (Rum, Rumpi, Lé) convocam os Orixás. Ngoma (Bantu) como presença ancestral. Sincroniza corações e corpos." },
-                { nome: "Travessia", tradicao: "Universal / Bantu / Diáspora", descricao: "Arquétipo da passagem que transforma. Kalunga como fronteira entre mundos. O Atlântico Negro como maior travessia forçada da história. Três momentos: partida, meio, chegada." },
-                { nome: "Ancestral", tradicao: "Universal / Bantu / Candomblé", descricao: "Arquétipo da origem viva. Não é o passado morto — é o passado que continua agindo. Egunguns, Pretos Velhos, Mifu (Bantu). Raiz que impede a árvore de cair." },
-                { nome: "Árvore", tradicao: "Universal / Yoruba / Nórdico / Bíblia", descricao: "Arquétipo do eixo do mundo. Iroko (Candomblé), Yggdrasil (Nórdico), Figueira de Bodhi (Budismo). Une raízes (ancestrais), tronco (vivos) e galhos (céus)." },
-                { nome: "Caçador", tradicao: "Universal / Yoruba / Grécia", descricao: "Arquétipo da busca precisa. Oxóssi (Candomblé), Ártemis (Grécia). Concentração, paciência e estratégia. Não mata por crueldade — caça por necessidade." },
-                { nome: "Caminho", tradicao: "Universal / Yoruba / Budismo / Taoísmo", descricao: "Arquétipo do movimento com sentido. Exu (Candomblé), Dharma (Hinduísmo), Tao (Taoísmo). Não é o destino — é o próprio ser em movimento." },
-                { nome: "Cruz", tradicao: "Universal / Bakongo / Egito / Cristianismo", descricao: "Arquétipo do encontro de forças opostas. Dikenga/Yowa (Bakongo), Ankh (Egito). Vertical (céu) encontra horizontal (terra). Centro onde tudo se decide." },
-                { nome: "Encruzilhada", tradicao: "Universal / Yoruba / Vodu / Grécia", descricao: "Arquétipo da escolha radical. Exu/Legba (Candomblé), Hécate (Grécia). Ponto onde os caminhos se separam e nenhuma escolha pode ser desfeita." },
-                { nome: "Sol", tradicao: "Universal / Egito / Candomblé / Bantu", descricao: "Arquétipo da consciência e da vida. Rá (Egito), Oxalá/Obatala (Candomblé), Nzambi (Bantu). Fonte primeira de energia vital. Sem o sol, não há axé." },
-                { nome: "Lua", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo da transformação cíclica. Regula rituais, plantio e ciclos do corpo. Na cosmologia bantu (ngonda), marca meses e purificações." },
-                { nome: "Pedra", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo da firmeza e permanência. Otás (Candomblé) — morada física dos orixás. Na tradição bantu, pedras guardam o espírito dos ancestrais." },
-                { nome: "Vento", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo da liberdade e presença espiritual. Iansã/Oyá (Candomblé), muema (Bantu — sopro vital de Nzambi). Carrega mensagens entre visível e invisível." },
-                { nome: "Terra", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo do corpo e da origem. Nanã Buruku (Candomblé), ntoto (Bantu). Corpo, sepultura e ventre. Recebe os mortos e dá origem aos vivos." },
-                { nome: "Casa", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo da proteção e memória. Terreiro (Candomblé) — microcosmo que replica a ordem do universo. Nzo a bakulu (Bantu) — casa dos ancestrais." },
-                { nome: "Chave", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo do acesso e da autoridade. Exu e Ogum (Candomblé). Acesso ao conhecimento oculto, à iniciação e aos mistérios." },
-                { nome: "Sangue", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo da vida e da linhagem. Ejé (Candomblé) — veículo do axé. Une vivos, mortos e divindades. Fio contínuo de memória e poder espiritual." },
-                { nome: "Porta", tradicao: "Universal / Candomblé / Bantu", descricao: "Arquétipo do limiar. Exu e Aluvaiá (Candomblé). Marca o limiar entre mundano e sagrado, vivos e mortos, interior e exterior." },
-                { nome: "Porão (do Navio)", tradicao: "Diáspora Africana", descricao: "Arquétipo traumático e fundador. Espaço de confinamento nos navios negreiros. Ruptura forçada com a terra natal, mas também resistência e (re)criação de culturas." }
-            ],
-            livros: [
-                { nome: "Nations nègres et culture", tradicao: "Cheikh Anta Diop", descricao: "Tese fundadora sobre a origem africana dos egípcios e a continuidade cultural entre África negra e Egito antigo." },
-                { nome: "La philosophie bantoue", tradicao: "Placide Tempels", descricao: "Sistematização da filosofia bantu através do conceito de Força Vital (Ntu)." },
-                { nome: "African Religions and Philosophy", tradicao: "John S. Mbiti", descricao: "Estudo dos conceitos africanos de tempo, Deus e religião. Introduziu Zamani e Sasa." },
-                { nome: "O Homem e seus Símbolos", tradicao: "Carl Gustav Jung", descricao: "Última obra de Jung, acessível ao público geral, sobre arquétipos, sonhos e inconsciente coletivo." },
-                { nome: "A Psicanálise do Fogo", tradicao: "Gaston Bachelard", descricao: "Análise do fogo como primeiro objeto de devaneio humano. Complexo de Prometeu e Empédocles." },
-                { nome: "A Água e os Sonhos", tradicao: "Gaston Bachelard", descricao: "Água como imaginação material do devaneio. Análise poética do elemento líquido." },
-                { nome: "A Terra e os Devaneios do Repouso", tradicao: "Gaston Bachelard", descricao: "Terra como elemento da intimidade, do repouso e da memória profunda." },
-                { nome: "As Estruturas Antropológicas do Imaginário", tradicao: "Gilbert Durand", descricao: "Tipologia dos símbolos universais e das estruturas do imaginário humano." },
-                { nome: "N'Kongo Ye Nza Yakun'zungidila", tradicao: "Bunseki Fu-Kiau", descricao: "'O Kongo e a sua Doutrina'. Cosmologia, religião e filosofia do povo Kongo." },
-                { nome: "Flash of the Spirit", tradicao: "Robert Farris Thompson", descricao: "'O Relâmpago do Espírito'. Arte e filosofia africana nas Américas." },
-                { nome: "The Afrocentric Idea", tradicao: "Molefi Kete Asante", descricao: "Fundamentos do Afrocentrismo como método acadêmico e epistemologia." },
-                { nome: "They Came Before Columbus", tradicao: "Ivan Van Sertima", descricao: "Evidências de contatos africanos pré-colombianos com as Américas." },
-                { nome: "Os Nagô e a Morte", tradicao: "Juana Elbein dos Santos", descricao: "Estudo antropológico do Candomblé de Angola e suas relações com a morte e os ancestrais." },
-                { nome: "Grande Sertão: Veredas", tradicao: "Guimarães Rosa", descricao: "'O sertão é o mundo'. Riobaldo atravessa o sertão e a si mesmo. A travessia como condição ontológica." },
-                { nome: "Philosophy and an African Culture", tradicao: "Kwasi Wiredu", descricao: "Filosofia africana desvinculada do colonialismo epistêmico. Conceito de 'consciencialismo'." }
-            ]
-        };
+  <div class="view" id="view-categorias">
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+</main>
 
-        // ═══════════════════════════════════════════════════════════════════
-        //  FUNÇÕES DE PESQUISA (TUDO LOCAL, SEM SERVIDOR)
-        // ═══════════════════════════════════════════════════════════════════
+<footer>
+  📚 Atlas & Pesquisa Académica — Cosmologias Africanas e Afro-diaspóricas · 16 categorias · 350+ conceitos · Inkices · Orixás · Umbanda · Jurema · Línguas · Escritas
+</footer>
 
-        function pesquisar() {
-            const termo = document.getElementById('termo').value.trim().toLowerCase();
-            if (!termo) return;
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DADOS
+   ═══════════════════════════════════════════════════════════════ */
 
-            const container = document.getElementById('resultados');
-            container.innerHTML = '<div class="loading">🔍 Pesquisando...</div>';
+const TEXT_DATA = {
 
-            const resultados = [];
-            for (const categoria in dados) {
-                dados[categoria].forEach(item => {
-                    if (
-                        item.nome.toLowerCase().includes(termo) ||
-                        item.tradicao.toLowerCase().includes(termo) ||
-                        item.descricao.toLowerCase().includes(termo)
-                    ) {
-                        resultados.push({ categoria, ...item });
-                    }
-                });
-            }
+conceitos: [
+  { nome:"Ubuntu", tradicao:"Bantu (Sul da África)", descricao:"Princípio ético-ontológico: 'Eu sou porque nós somos'. A pessoa se constitui na comunidade." },
+  { nome:"Zamani e Sasa", tradicao:"Bantu / John Mbiti", descricao:"Concepção de tempo: passado profundo coletivo (Zamani) e o presente vivido (Sasa)." },
+  { nome:"Ntu, Kintu, Hantu, Kuntu, Bintu", tradicao:"Bantu / Placide Tempels", descricao:"As quatro categorias fundamentais do ser na filosofia bantu (Força Vital)." },
+  { nome:"Kalunga", tradicao:"Bakongo", descricao:"Linha/fronteira cosmológica entre o mundo dos vivos e o mundo dos ancestrais. O mar como portal." },
+  { nome:"Dikenga / Yowa", tradicao:"Bakongo", descricao:"Cosmograma em cruz que representa o ciclo de vida-morte-renascimento. Os quatro momentos do sol: Musoni (leste/nascimento), Kala (zênite/vida), Tukula (oeste/morte), Luvemba (nadir/ressurreição ancestral). A linha horizontal divide vivos (cima) de mortos (baixo)." },
+  { nome:"Ngozi e Amadlozi", tradicao:"Zulu", descricao:"Espíritos ancestrais que medeiam entre os vivos e o Criador." },
+  { nome:"Ma'at", tradicao:"Egito Antigo / Kemetic", descricao:"Princípio de ordem cósmica, justiça e equilíbrio. A verdade que sustenta o universo." },
+  { nome:"Ka e Ba", tradicao:"Egito Antigo", descricao:"Ka = força vital que anima o corpo. Ba = personalidade, alma que viaja após a morte." },
+  { nome:"Nommo", tradicao:"Dogon", descricao:"Força criadora da palavra falada — a palavra que cria a realidade." },
+  { nome:"Asé / Axé", tradicao:"Yoruba / Candomblé", descricao:"Força vital, energia sagrada que sustenta toda a existência. Substância que se acumula, transmite e alimenta." },
+  { nome:"Heka", tradicao:"Egito Antigo", descricao:"Magia como força criadora e palavra de poder." },
+  { nome:"Sankofa", tradicao:"Akan / Gana", descricao:"'Não é vergonha voltar atrás para buscar o que se esqueceu.' Princípio do retorno ao passado para avançar." },
+  { nome:"Mandombe", tradicao:"Kikongo / Wabeladio Payi", descricao:"Sistema de escrita sagrada revelado por Wabeladio Payi em 1978, inspirado pelos espíritos ancestrais kongo. Cada letra representa uma força cósmica derivada das formas geométricas 5 e 2. É usado atualmente por comunidades kongo em Angola, RDC e diáspora como símbolo de identidade cultural e resistência." },
+  { nome:"Tempo Circular", tradicao:"Cosmologia Africana", descricao:"O tempo é espiral, cíclico, vivo. Os ancestrais retornam através dos descendentes; os mitos não pertencem ao passado, mas ao eterno presente." },
+  { nome:"Nkisi", tradicao:"Kongo / Angola", descricao:"Objeto sagrado carregado de força espiritual. Cada nkisi contém substâncias específicas que canalizam poderes de cura, proteção ou justiça." },
+  { nome:"Ori", tradicao:"Yoruba", descricao:"A cabeça interior, o destino pessoal. Cada pessoa escolhe seu Ori antes de nascer. Ori é saudado antes de qualquer orixá." },
+  { nome:"Ifá", tradicao:"Yoruba / Benin", descricao:"Sistema de adivinhação sagrada com 256 Odu. Conhecimento oracular de Orunmila, o orixá da sabedoria. Patrimônio Imaterial da Humanidade pela Unesco (2005)." },
+  { nome:"Nzambi", tradicao:"Bantu / Kongo", descricao:"Deus criador supremo na cosmologia bantu. O sol (ntangu) é sinal da sua presença. Força que permeia tudo." }
+],
 
-            mostrarResultados({ termo: document.getElementById('termo').value, total: resultados.length, resultados });
-        }
+divindades: [
+  { nome:"Olorun / Olodumare", tradicao:"Yoruba / Nagô", descricao:"Deus supremo, criador do universo. Inacessível diretamente — comunica-se através dos orixás." },
+  { nome:"Nyame", tradicao:"Akan / Gana", descricao:"Deus supremo que se retirou após a criação. Presente nos símbolos Adinkra 'Gye Nyame'." },
+  { nome:"Amma", tradicao:"Dogon", descricao:"Deus criador que fez o mundo a partir de um ovo cósmico. A criação resultou de um erro primordial." },
+  { nome:"Unkulunkulu", tradicao:"Zulu", descricao:"O Primeiro, ancestral primordial e criador. Trouxe humanidade, medicina, fogo e agricultura." },
+  { nome:"Rá / Re", tradicao:"Egito Antigo", descricao:"Deus do sol, criador e fonte de toda vida. O faraó era considerado filho de Rá. Atravessa o submundo à noite." },
+  { nome:"Ísis / Aset", tradicao:"Egito Antigo", descricao:"Deusa mãe, protetora mágica. Senhora da magia, do amor e da ressurreição. Ressuscitou Osíris e concebeu Hórus." },
+  { nome:"Osíris / Usir", tradicao:"Egito Antigo", descricao:"Deus da morte, ressurreição e fertilidade. Juiz dos mortos. Morto e ressuscitado — modelo de renovação cíclica." },
+  { nome:"Hórus / Heru", tradicao:"Egito Antigo", descricao:"Divindade da realeza e do céu. Representado como falcão. Filho de Osíris e Ísis." },
+  { nome:"Thoth / Djehuti", tradicao:"Egito Antigo", descricao:"Deus da sabedoria, da escrita e da magia. Inventou a escrita hieroglífica. Pesou o coração dos mortos." },
+  { nome:"Apedemak", tradicao:"Reino de Cuxe / Núbia", descricao:"Deus-leão da guerra e fertilidade. Principal divindade do Reino de Cuxe." },
+  { nome:"Iemanjá", tradicao:"Yoruba / Candomblé", descricao:"Mãe das águas do mar. Senhora da maternidade, proteção e amor incondicional. Orixá dos pescadores." },
+  { nome:"Oxum", tradicao:"Yoruba / Candomblé", descricao:"Senhora das águas doces, do amor, da fertilidade e da beleza. Usa espelho e leque dourado. Deus da riqueza interior." },
+  { nome:"Nanã Buruku", tradicao:"Fon / Candomblé", descricao:"Senhora da terra e da lama primordial. A mais ancestral das orixás — existia antes do ferro ser descoberto." },
+  { nome:"Xangô / Jakuta", tradicao:"Yoruba / Candomblé", descricao:"Orixá do fogo, trovão e justiça. Senhor do raio. Antigo rei de Oyó. Usa machado duplo (oxê)." },
+  { nome:"Ogum / Ogun", tradicao:"Yoruba / Candomblé", descricao:"Orixá da guerra, do ferro e da forja. Quem abre caminhos. Patrono dos ferreiros e guerreiros." },
+  { nome:"Oxóssi / Ochosi", tradicao:"Yoruba / Candomblé", descricao:"Orixá da caça, fartura e conhecimento da floresta. Arqueiro preciso. Rei de Ketu." },
+  { nome:"Oxumaré / Oshumare", tradicao:"Yoruba / Candomblé", descricao:"Orixá da serpente arco-íris, princípio da renovação e riqueza. Metade do ano masculino, metade feminino." },
+  { nome:"Exu / Elegba / Eshu", tradicao:"Yoruba / Candomblé", descricao:"Senhor dos caminhos e encruzilhadas. Guardião do limiar, mensageiro dos orixás. Primeiro a ser saudado. Não é o diabo — é o princípio da comunicação e da escolha." },
+  { nome:"Iansã / Oyá", tradicao:"Yoruba / Candomblé", descricao:"Orixá dos ventos, tempestades e raios. Senhora das mudanças radicais. Controla os Egunguns." },
+  { nome:"Obatalá / Oxalá", tradicao:"Yoruba / Candomblé", descricao:"Criador das formas humanas. Senhor do branco, da paz e da sabedoria. O orixá mais venerado." },
+  { nome:"Iroko", tradicao:"Yoruba / Candomblé", descricao:"Orixá da árvore gameleira, do tempo, da justiça e dos ancestrais. A árvore mais sagrada." },
+  { nome:"Ossaim / Osain", tradicao:"Yoruba / Candomblé", descricao:"Senhor das folhas sagradas. Nenhum ritual funciona sem suas folhas. Conhecimento que mora na árvore." },
+  { nome:"Orunmila / Ifá", tradicao:"Yoruba", descricao:"Orixá da sabedoria e da adivinhação. Testemunhou a criação do mundo. Guardião do corpus de Ifá." },
+  { nome:"Ewá", tradicao:"Yoruba / Candomblé", descricao:"Orixá das águas misteriosas, da beleza e do destino. Irmã de Oxum." },
+  { nome:"Logum Edé", tradicao:"Yoruba / Candomblé", descricao:"Filho de Oxóssi e Oxum. Metade do ano na floresta, metade nas águas. Orixá da abundância." },
+  { nome:"Omolu / Obaluaê", tradicao:"Yoruba / Candomblé", descricao:"Orixá da varíola, das doenças e da cura. Coberto de palha para esconder o corpo marcado. Senhor da vida e da morte." }
+],
 
-        function buscarTag(tag) {
-            document.getElementById('termo').value = tag;
-            pesquisar();
-        }
+inkices: [
+  { nome:"Aluvaiá / Bombojira", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Senhor das encruzilhadas e dos limites entre mundos. Nenhuma cerimônia Angola começa sem sua licença. Guardião da fronteira entre o humano e o sagrado. Equivalência aproximada: Exu/Elegba (Nagô). Elemento: Terra. Cor: Preto e vermelho. Saudação: 'Mavambo!'", extra:"Comparação: Exu (Ketu/Nagô) — ambos guardiões dos caminhos, primeiros a receber oferendas." },
+  { nome:"Mukumbi — Inkosi ya Mazemba", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Nkisi da realeza espiritual e da liderança sagrada. Governa a hierarquia ancestral e a transmissão do conhecimento entre gerações. Equivalência: Oxalufã (Nagô). Elemento: Ar e terra. Cor: Branco e dourado. Saudação: 'Nkosi!'", extra:"Comparação: Obatalá/Oxalá (Ketu) — ambos representam o branco primordial, paz e sabedoria." },
+  { nome:"Mutakalambô", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Senhor absoluto da floresta densa. Governa os animais, a caça, os segredos da mata e as plantas de poder. O mato fechado onde os espíritos habitam livremente. Equivalência: Oxóssi (Nagô). Elemento: Terra e vegetação. Cor: Verde escuro e preto.", extra:"Comparação: Oxóssi (Ketu) — ambos senhores da mata, da caça e do conhecimento silvestre." },
+  { nome:"Katendê", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Guardião do conhecimento das plantas sagradas. Sabe o segredo de cada folha, raiz e casca. Governa a fitoterapia sagrada, banhos rituais, defumações e preparos de cura. Equivalência: Ossaim (Nagô). Elemento: Vegetação e água. Cor: Verde e amarelo. Saudação: 'Katendê!'", extra:"Comparação: Ossaim (Ketu) — ambos mestres das ervas. Katendê é mais ligado à cura física, Ossaim ao mistério das folhas." },
+  { nome:"Kavungo / Karunga", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Governa o território onde vida e morte se tocam. A doença como passagem e transformação. Equivalência: Omolu/Obaluaê (Nagô). Elemento: Terra e osso. Cor: Branco e preto. Saudação: 'Atotô!'", extra:"Comparação: Omolu/Obaluaê (Ketu) — ambos senhores das doenças e da cura, cobertos para esconder o mistério do corpo." },
+  { nome:"Angorô / Angoromi", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"A serpente arco-íris — mediadora entre o mundo celeste e o terrestre. Governa a diplomacia, a mediação e a renovação após a tempestade. Equivalência: Oxumaré (Nagô). Elemento: Água e ar. Cor: Todas as cores do arco-íris.", extra:"Comparação: Oxumaré (Ketu) — ambos são a serpente arco-íris, princípio da renovação e da riqueza circular." },
+  { nome:"Zaze / Nsasi", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Nkisi do raio e da justiça divina. A força que desce do céu com poder absoluto. O fogo purificador que transforma. Equivalência: Xangô (Nagô). Elemento: Fogo e ar. Cor: Vermelho, branco e dourado. Saudação: 'Kaô Kabiecilê!'", extra:"Comparação: Xangô (Ketu) — ambos são o raio, a justiça e o fogo. Zaze tem caráter mais ancestral e temido." },
+  { nome:"Kitembu", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Governa o vento e o tempo mítico dos ancestrais. A memória ancestral que chega como vento. O arquivo vivo da tradição. Equivalência: Iansã/Oyá (Nagô). Elemento: Ar. Cor: Roxo e branco.", extra:"Comparação: Iansã (Ketu) — ambos do vento e das tempestades. Kitembu é mais associado à memória ancestral." },
+  { nome:"Matamba", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Rainha guerreira — figura histórica (Rainha Nzinga/Njinga) e mítica. Governa a guerra sagrada, a proteção do povo e a resistência à opressão. Equivalência: Iansã (Nagô). Elemento: Vento e fogo. Cor: Roxo, preto e vermelho.", extra:"Comparação: Iansã (Ketu) — ambas guerreiras e donas do vento. Matamba carrega a memória histórica de Rainha Njinga." },
+  { nome:"Dandalunda / Samba", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Senhora das águas doces — rios, lagos, cachoeiras. Governa o amor, fertilidade, beleza e cura pelas águas. A água que nutre pela gentileza. Equivalência: Oxum (Nagô). Elemento: Água doce. Cor: Azul claro, rosa e branco. Saudação: 'Ora Iê!'", extra:"Comparação: Oxum (Ketu) — ambas das águas doces, amor e beleza. Dandalunda é mais ligada à fertilidade da terra." },
+  { nome:"Kaitumba", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Governa as águas salgadas e profundas — o mar como Kalunga. Guarda o que foi perdido no fundo do mar. Equivalência: Iemanjá (Nagô). Elemento: Água salgada. Cor: Azul profundo e preto.", extra:"Comparação: Iemanjá (Ketu) — ambas do mar. Kaitumba é mais ligada ao aspecto da fronteira (Kalunga) entre mundos." },
+  { nome:"Zumbarandá", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Nkisi dos ancestrais mais antigos — tão antigos que já se tornaram força pura. Governa a velhice sagrada, a sabedoria do tempo. Equivalência: Nanã Buruku (Nagô). Elemento: Terra e osso. Cor: Branco e preto.", extra:"Comparação: Nanã Buruku (Ketu) — ambos os mais antigos, anteriores ao ferro. Zumbarandá representa a sabedoria que só o tempo acumula." },
+  { nome:"Wuji / Nzambi a Mpungu", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Nkisi do céu e da criação primordial. A força que estava antes de tudo. Governa o cosmos e os grandes ciclos do tempo. Equivalência aproximada: Obatalá / Oxalá (Nagô). Elemento: Ar e éter. Cor: Azul celeste e dourado.", extra:"Comparação: Oxalá (Ketu) — ambos princípios primordiais da criação. Wuji é mais a força cósmica inominável." },
+  { nome:"Lembaranganga", tradicao:"Candomblé de Angola / Bantu-Kongo", descricao:"Protege o nascimento. O recém-nascido é um ancestral que voltou. Governa a proteção de crianças, gestantes e recém-chegados. Equivalência: Oxalá bebê / Erê (Nagô). Elemento: Água e terra. Cor: Branco e azul claro.", extra:"Comparação: Erê/Ibêji (Ketu) — ambos ligados à infância sagrada e ao portal de chegada ao mundo." },
+  { nome:"Mesa Jurema Sagrada — Caboclo", tradicao:"Candomblé de Angola / Brasil", descricao:"O ponto onde a tradição Angola toca o Brasil profundo — onde os Inkices africanos encontram os espíritos indígenas da floresta brasileira. Governa a síntese e a sabedoria da floresta brasileira. Elemento: Terra, vegetação e fogo. Cor: Verde, vermelho e amarelo.", extra:"Síntese afro-indígena única do Brasil. Sem equivalente direto em tradições africanas — nasce do encontro colonial." },
+  { nome:"Nkosi Mutalambô — O Caçador Sagrado", tradicao:"Candomblé de Angola", descricao:"Variante de Mutakalambô como 'nkosi' (rei/senhor) da floresta. Governa a hierarquia dos animais selvagens e o equilíbrio do ecossistema espiritual." },
+  { nome:"Tempo — Inkice do Tempo", tradicao:"Candomblé de Angola / Brasil", descricao:"Inkice específico do Brasil que governa o tempo atmosférico e o tempo mítico. Fusão de elementos bantu com orixá Iroko. Cor: Verde, azul e vermelho.", extra:"Sem paralelo direto em Angola. Criação da diáspora brasileira." }
+],
 
-        function listarCategoria(categoria) {
-            const container = document.getElementById('resultados');
-            container.innerHTML = '<div class="loading">📂 Carregando...</div>';
+umbanda: [
+  { nome:"Caboclos", tradicao:"Umbanda / Brasil", descricao:"Espíritos de índios brasileiros que trabalham nas giras de umbanda. Representam a força da natureza, a medicina das ervas e a sabedoria da floresta. Principais: Caboclo das Sete Encruzilhadas (fundador espiritual da Umbanda), Tupinambá, Guaraci, Pedra Branca, Sete Flechas. Vestes de pena e couro. Trabalham com fumo e ervas." },
+  { nome:"Pretos Velhos", tradicao:"Umbanda / Brasil", descricao:"Espíritos de escravizados africanos que alcançaram a paz e a sabedoria. Trabalham com paciência, caridade e cura pelas ervas. Sentam em cadeiras baixas, fumam cachimbo, usam bengala. Principais: Pai Joaquim, Vovó Catarina, Pai Cipriano, Vovó Maria Conga. São a memória viva da resistência e do amor negro." },
+  { nome:"Exus (Umbanda)", tradicao:"Umbanda / Brasil", descricao:"Na Umbanda, os Exus são entidades da esquerda que trabalham nas encruzilhadas, noite e madrugada. Não são os orixás Exu — são espíritos humanos que se especializaram nesse trabalho. Principais: Exu Tiriri, Exu Marabô, Exu das Almas, Exu Tranca-Ruas, Exu Meia-Noite, Exu Caveira. Trabalham com pemba, vela preta/vermelha e charuto." },
+  { nome:"Pombagiras", tradicao:"Umbanda / Brasil", descricao:"Entidades femininas da esquerda, companheiras dos Exus. Trabalham com amor, sexualidade, independência feminina e justiça. Principais: Pombagira Maria Padilha, Pombagira das Almas, Pombagira Rainha das Encruzilhadas, Pombagira Cigana. Vestem vermelho e preto, usam rosas, bebem champanhe. Símbolo da mulher livre e poderosa." },
+  { nome:"Boiadeiros", tradicao:"Umbanda / Brasil", descricao:"Espíritos dos vaqueiros e peões do sertão brasileiro. Trabalham com força, coragem e cura. Bebem cachaça, fumam cigarro de palha, usam chapéu de couro. Cantos (pontos) com linguagem do campo." },
+  { nome:"Marinheiros", tradicao:"Umbanda / Brasil", descricao:"Espíritos de marinheiros e pescadores. Trabalham com as águas e as travessias. Ligados a Iemanjá e Oxum. Bebem rum e cachaça, cantam pontos do mar." },
+  { nome:"Baianos", tradicao:"Umbanda / Brasil", descricao:"Espíritos festivos e alegres do povo baiano. Trabalham com alegria, axé e descontração. São considerados 'coringa' da Umbanda — trabalham em várias linhas." },
+  { nome:"Ervas Sagradas", tradicao:"Umbanda / Candomblé / Jurema", descricao:"As ervas são fundamentais nos rituais afro-brasileiros. Cada entidade tem suas folhas. Principais: Arruda (proteção/Ogum), Guiné (limpeza/Exu), Espada-de-São-Jorge (proteção), Manjericão (amor/Oxum), Jurema (visão/Caboclos), Pata-de-vaca (cura/Preto Velho), Alfazema (paz), Aroeira (força). Katendê e Ossaim são seus guardiões." },
+  { nome:"Giras", tradicao:"Umbanda / Brasil", descricao:"Cerimônias rituais da Umbanda onde médiuns incorporam as entidades espirituais ao som do tambor e dos pontos cantados. Cada entidade tem sua gira específica: Gira de Exu e Pombagira (à meia-noite), Gira dos Caboclos, Gira dos Pretos Velhos. O ponto cantado é o chamado." },
+  { nome:"Gongos / Atabaques", tradicao:"Umbanda / Candomblé", descricao:"Os tambores sagrados que convocam os espíritos. No Candomblé: Rum (maior), Rumpi (médio), Lé (menor). Na Umbanda: geralmente um ou dois tambores. O ritmo do tambor é a voz que atravessa os mundos." },
+  { nome:"Ponto Cantado", tradicao:"Umbanda / Brasil", descricao:"Canto ritual que identifica e convoca cada entidade. Cada entidade tem seus pontos exclusivos. São preservados na memória oral dos terreiros. Exemplo de ponto de Preto Velho: 'Lá na beira do mar eu vi, vi uma coisa bonita, era o Pai Joaquim da Bahia, com a bengala, cachimbinho e a garrafinha'." },
+  { nome:"Pemba / Ponto Riscado", tradicao:"Umbanda / Candomblé Angola", descricao:"Giz sagrado usado para riscar os pontos (grafias rituais) de cada entidade no chão do terreiro. Cada entidade tem sua 'assinatura' gráfica que funciona como portal e identidade. A pemba branca é a mais usada." }
+],
 
-            if (!dados[categoria]) {
-                container.innerHTML = '<div class="no-results">Categoria não encontrada</div>';
-                return;
-            }
+pajelanca: [
+  { nome:"Jurema Sagrada", tradicao:"Jurema / Brasil / Nordeste", descricao:"Religião indígena-africana do Nordeste brasileiro, centrada na planta Jurema (Mimosa hostilis / tenuiflora), cujo vinho alucinógeno permite comunicação com os encantados. A Jurema é também uma entidade: a Cabocla Jurema, princesa dos povos indígenas nordestinos. Cidades da Jurema: Jurema Branca, Jurema Preta, Cidade do Catimbó, Aldeia Sagrada." },
+  { nome:"Catimbó", tradicao:"Jurema / Brasil Nordeste", descricao:"Nome mais antigo para as práticas da Jurema. O mestre do Catimbó (juremeiro) comunica-se com encantados através do cachimbo de Jurema e das defumações. Sincretismo entre práticas indígenas Tupi, africanas e ibéricas." },
+  { nome:"Encantados da Jurema", tradicao:"Jurema / Nordeste", descricao:"Entidades da Jurema: Mestres (juremeiros antigos que nunca morreram — 'encantaram'), Caboclos indígenas, Cangaceiros encantados (Lampião, Maria Bonita), Boiadeiros, Marinheiros. Os Mestres não são 'espíritos de mortos' mas seres que se transformaram em força da natureza." },
+  { nome:"Pajelança", tradicao:"Indígena / Brasil / Amazônia", descricao:"Práticas xamânicas dos povos indígenas brasileiros, especialmente da Amazônia. O pajé é o intermediário entre humanos e o mundo espiritual. Usa tabaco, maracá e plantas de poder (Ayahuasca/Cipó). Cura doenças, prevê o futuro e protege a comunidade. Sobreviveu sincretizada na Pajelança Cabocla e no Catimbó." },
+  { nome:"Mestra Jurema (Entidade)", tradicao:"Jurema / Brasil", descricao:"A própria planta como entidade — princesa índia encantada na árvore. Senhora da floresta nordestina, da cura e da visão. Veste branco ou azul, usa cocar. Trabalha com maracá e defumação de Jurema." },
+  { nome:"Cabocla Jurema", tradicao:"Umbanda / Jurema", descricao:"Na Umbanda, a Cabocla Jurema é uma entidade feminina poderosa, ligada à floresta, às ervas e ao conhecimento ancestral indígena. Trabalha com cura e limpeza espiritual." }
+],
 
-            mostrarCategoria({ categoria, total: dados[categoria].length, dados: dados[categoria] });
-        }
+cosmogonias: [
+  { nome:"Obatala cria a Terra", tradicao:"Yoruba", descricao:"Obatala desce do céu com uma corrente de areia para formar o mundo seco. O caracol (igbin) continha a terra primordial." },
+  { nome:"Ovo Cósmico de Amma", tradicao:"Dogon", descricao:"Amma cria o universo a partir de um ovo que se rompe em oito fragmentos." },
+  { nome:"Criação de Unkulunkulu", tradicao:"Zulu", descricao:"Nasceu da junco e trouxe humanidade, medicina, fogo e agricultura." },
+  { nome:"O Nilo como Deus Hapi", tradicao:"Egito Antigo", descricao:"O Nilo é o deus Hapi, dador de vida. Suas cheias anuais traziam fertilidade ao deserto." },
+  { nome:"Rá e a Criação", tradicao:"Egito Antigo", descricao:"Rá cria o mundo com sua luz e seu nome secreto. A fala criativa (Heka) precede toda forma." },
+  { nome:"Osiris, Ísis e Hórus", tradicao:"Egito Antigo", descricao:"Osíris é morto por Set, ressuscitado por Ísis, e Hórus vinga o pai. Modelo de morte e ressurreição." },
+  { nome:"Kalunga como Fronteira", tradicao:"Bakongo", descricao:"O mundo é dividido pelo Kalunga — a água que separa e conecta vivos e mortos." },
+  { nome:"Dikenga como Ciclo Cósmico", tradicao:"Bakongo", descricao:"O cosmograma em cruz representa os quatro momentos do sol: nascimento, meio-dia, pôr do sol, meia-noite." }
+],
 
-        function mostrarResultados(data) {
-            const container = document.getElementById('resultados');
+ritos: [
+  { nome:"Candomblé", tradicao:"Yoruba-Fon-Bantu / Brasil", descricao:"Sistema religioso afro-brasileiro de comunicação com orixás, voduns e inkices. Toque de atabaques, dança sagrada, oferendas e iniciação." },
+  { nome:"Vodun", tradicao:"Fon / Benin / Haiti", descricao:"Culto aos deuses e ancestrais com transe e oferendas. Tambor como portal entre mundos." },
+  { nome:"Umbanda", tradicao:"Brasil / Século XX", descricao:"Religião brasileira que sintetiza espiritismo kardecista, candomblé, catolicismo popular e pajelança indígena. Fundada espiritualmente em 1908 por Zélio de Moraes e o Caboclo das Sete Encruzilhadas no Rio de Janeiro." },
+  { nome:"Toque de Atabaques", tradicao:"Candomblé", descricao:"Os três tambores sagrados (Rum, Rumpi, Lé) convocam os Orixás. O ritmo abre o portal entre mundos." },
+  { nome:"Culto dos Egunguns", tradicao:"Yoruba", descricao:"Culto dos ancestrais mascarados. Os mortos retornam para falar com os vivos através das máscaras sagradas." },
+  { nome:"Rito de Passagem Bantu (Mukanda)", tradicao:"Bantu / Chokwe", descricao:"Iniciação masculina que marca a transição da infância para vida adulta. Os Sona são ensinados durante este rito." },
+  { nome:"Ifá / Consulta ao Oráculo", tradicao:"Yoruba", descricao:"O babalaô lança as sementes de palma ou o opele (corrente de Ifá) para revelar o Odu. O Odu traz narrativas, proibições e prescrições rituais." }
+],
 
-            if (data.resultados.length === 0) {
-                container.innerHTML = `
-                    <div class="no-results">
-                        <h3>⚠️ Nenhum resultado encontrado</h3>
-                        <p>Não encontramos nada para "${data.termo}"</p>
-                    </div>
-                `;
-                return;
-            }
+civilizacoes: [
+  { nome:"Grande Zimbabwe", tradicao:"Shona", descricao:"Civilização medieval (séc. XI–XV) com muralhas de pedra sem argamassa, comércio de ouro e sofisticada organização política." },
+  { nome:"Império do Kongo", tradicao:"Kongo / Angola", descricao:"Reino central-africano com 500 anos de história. Capital: Mbanza Kongo. Contato precoce com Portugal (1482). Base do Candomblé Angola." },
+  { nome:"Egito Antigo / Kemet", tradicao:"Kemetic", descricao:"Civilização do Nilo: pirâmides, hieróglifos, filosofia e matemática avançadas. Cheikh Anta Diop provou sua africanidade." },
+  { nome:"Axum", tradicao:"Etiópia", descricao:"Reino etíope com obeliscos, escrita Ge'ez e um dos primeiros reinos cristãos do mundo (séc. IV)." },
+  { nome:"Reino de Cuxe / Núbia", tradicao:"Núbia / Sudão", descricao:"Dominou o Egito como 25ª Dinastia Núbia. Centros de ferro (Meroé) e ouro. Preservaram a cultura kemética." },
+  { nome:"Reino de Mali / Timbuktu", tradicao:"Mali / Oeste África", descricao:"Grande império. Mansa Musa — o homem mais rico de todos os tempos. Universidade de Timbuktu com 25.000 estudantes." },
+  { nome:"Reino de Benin", tradicao:"Edo / Nigéria", descricao:"Bronzes de Benin, sistema de muralhas, arte sofisticada. Bronzes saqueados pela Inglaterra em 1897 estão sendo devolvidos." }
+],
 
-            let html = `<div class="info">📊 ${data.total} resultado(s) para "${data.termo}"</div>`;
-            data.resultados.forEach(item => {
-                html += criarCard(item);
-            });
-            container.innerHTML = html;
-        }
+linguas: [
+  { nome:"Árabe", tradicao:"África do Norte / Sahel", descricao:"Língua semítica, língua de comércio e religião em grande parte do continente. Exemplos: 'السلام عليكم' (As-salamu alaykum) = A paz esteja contigo. 'الله أكبر' (Allahu Akbar) = Deus é grande. 'شكراً' (Shukran) = Obrigado." },
+  { nome:"Chokwe / Tchokwe", tradicao:"Angola / RDC / Zâmbia", descricao:"Língua bantu falada pelos Chokwe, conhecidos pela arte, máscaras e Sona. Exemplos: 'Mukishi' = espírito ancestral / máscara ritual. 'Mwana' = filho/a. 'Tata' = pai. 'Lusona' = desenho sagrado na areia." },
+  { nome:"Kassanje", tradicao:"Angola / Rio Kassanje", descricao:"Língua bantu do centro-norte de Angola. Região histórica do tráfico e resistência. Exemplos: 'Wetu' = nossa terra. 'Mbanza' = cidade sagrada / capital do reino. Combinada com elementos do Kimbundo." },
+  { nome:"Kikongo", tradicao:"Kongo / Angola / RDC / Gabão", descricao:"Língua bantu base do Mandombe e das religiões Angola. Exemplos: 'Kalunga' = mar / fronteira entre mundos. 'Nkisi' = força espiritual / objeto sagrado. 'Nza' = mundo / terra. 'Muntu' = pessoa. 'Nzambi' = Deus. 'Mpemba' = terra branca / mundo dos mortos." },
+  { nome:"Kimbundo", tradicao:"Angola / Reinos do Ndongo e Matamba", descricao:"Língua bantu do norte de Angola, língua da Rainha Njinga/Nzinga. Base do português afro-brasileiro. Exemplos: 'Nzambi' = Deus criador. 'Mbanza' = cidade / capital. 'Samba' = dança / nome próprio. 'Quimbundo' = feitiço / proteção. 'Capoeira' (possivelmente do Kimbundo 'capueira' = mato alto)." },
+  { nome:"Lingala", tradicao:"RDC / Congo-Brazzaville", descricao:"Língua bantu, língua da música congolesa (soukous, rumba, ndombolo). Exemplos: 'Mobali' = homem. 'Mwasi' = mulher. 'Bolingo' = amor. 'Ndeko' = amigo/irmão. 'Matondi' = obrigado. 'Nakokuma' = vou levantar." },
+  { nome:"Ngangela / Ganguela", tradicao:"Angola sudeste / Zâmbia", descricao:"Grupo de línguas bantu do sudeste de Angola. Povos com tradição oral e cosmologia ricas. Exemplos: 'Nyambe' = Deus criador. 'Litunga' = rei/chefe sagrado. 'Nao' = terra / lugar. 'Tata' = pai. 'Mama' = mãe." },
+  { nome:"Swahili / Kiswahili", tradicao:"África Oriental / Língua Franca", descricao:"Língua franca do Leste Africano, falada por 200 milhões de pessoas. Mistura bantu com árabe. Exemplos: 'Jambo' = olá. 'Asante' = obrigado. 'Hakuna matata' = sem problemas. 'Simba' = leão. 'Ubuntu' (também em Swahili) = humanidade. 'Kwa heri' = tchau." },
+  { nome:"Umbundo", tradicao:"Angola / Benguela / Huambo", descricao:"Língua bantu mais falada em Angola (centro). Exemplos: 'Ombembua' = ancestral. 'Ondumbo' = força vital. 'Okulya' = comer. 'Okuliwa' = beber. 'Otchindele' = estrangeiro / branco. 'Epata' = família." },
+  { nome:"Yoruba", tradicao:"Yoruba / Nigéria / Benin / Brasil", descricao:"Língua tonal sagrada do Candomblé e do Ifá. Exemplos: 'Asé' = força vital / que assim seja. 'Ori' = cabeça / destino. 'Orixá' = divindade. 'Àìyé' = mundo físico. 'Òrun' = mundo espiritual. 'Ẹni tó bá bí ọmọ, kó máa gbé' = quem tem filhos, que os cuide." },
+  { nome:"Akan / Twi", tradicao:"Akan / Gana / Costa do Marfim", descricao:"Língua dos Adinkra e provérbios. Exemplos: 'Sankofa' = volte e busque. 'Obra' = criação/trabalho. 'Nyame nnwu na mawu' = Deus não morre então eu não morro." },
+  { nome:"Wolof", tradicao:"Senegal / Gâmbia", descricao:"Principal língua do Senegal, língua dos griots. Exemplos: 'Ndam' = paz. 'Jàmm' = tranquilidade / paz. 'Teranga' = hospitalidade (valor fundamental). 'Xam-Xam' = conhecimento / saber." },
+  { nome:"Zulu / isiZulu", tradicao:"Zulu / África do Sul", descricao:"Língua bantu com clicks e conceitos filosóficos profundos. Exemplos: 'Ubuntu' = eu sou porque nós somos. 'Sawubona' = eu te vejo (cumprimento que reconhece a existência do outro). 'Umuntu ngumuntu ngabantu' = uma pessoa é uma pessoa através de outras pessoas." },
+  { nome:"Ge'ez", tradicao:"Etiópia / Eritreia", descricao:"Língua semítica litúrgica da Igreja Ortodoxa etíope. Base do alfabeto Ge'ez. Exemplos: 'ሰላም' (Selam) = paz. 'አምላክ' (Amlak) = Deus. 'ፍቅር' (Fikir) = amor. 'ሕዝብ' (Hizb) = povo." }
+],
 
-        function mostrarCategoria(data) {
-            const container = document.getElementById('resultados');
+escritas: [
+  { nome:"Adinkra", tradicao:"Akan / Gana / Costa do Marfim", descricao:"Símbolos filosóficos estampados em tecidos e tatuados em pele. Cada símbolo carrega um provérbio. Principais: 'Gye Nyame' ☩ = exceto Deus (supremacia divina). 'Sankofa' = volte e busque (pássaro com cabeça voltada). 'Dwennimmen' = chifres de carneiro (humildade e força). 'Adinkrahene' = rei dos Adinkra (grandeza). 'Ese Ne Tekrema' = dentes e língua (amizade nas diferenças). 200+ símbolos catalogados." },
+  { nome:"Ge'ez / Fidel", tradicao:"Etiópia / Eritreia", descricao:"Alfabeto semítico, um dos mais antigos do mundo em uso contínuo. 26 letras base com 7 formas cada = 182+ grafemas. Escrita da esquerda para direita. Letras: 'ሀ' (Ha), 'ለ' (La), 'ሐ' (Ḥa), 'መ' (Ma), 'ሰ' (Sa). Exemplo: 'ኢትዮጵያ' = Etiópia. 'ሰላም' = paz. 'አምላክ' = Deus." },
+  { nome:"Hieróglifos Egípcios / Medu Neter", tradicao:"Kemet / Egito Antigo", descricao:"'Palavras dos deuses' — sistema de escrita sagrada com 700+ sinais no Egito Médio (7.000+ total). Logogramas + silabogramas + determinativos. Principais: '𓋹' (Ankh) = vida. '𓂀' (Udjat/Wedjat) = olho de Hórus/proteção. '𓁹' (Irt) = olho/ver. '𓇋' (I). '𓆑' (F). '𓈖' (N). Escrita de Jean-François Champollion decifrada em 1822 com a Pedra de Roseta." },
+  { nome:"Mandombe", tradicao:"Kikongo / Wabeladio Payi / RDC", descricao:"Escrita revelada em 1978 a Wabeladio Payi pelo espírito ancestral Simon Kimbangu em Mbanza Ngungu, RDC. Base geométrica: formas derivadas dos números 5 e 2 rotacionados. Possui vogais, consoantes e tonais. Escreve Kikongo, Lingala, Tshiluba e Swahili. Símbolo de identidade cultural kongo. Exemplo de palavra: 'Nza' (mundo) — traçado em dois movimentos geométricos." },
+  { nome:"Nsibidi", tradicao:"Ekpe / Igbo / Ejagham / Nigéria / Camarões", descricao:"Sistema ideográfico do sudeste nigeriano com 500+ sinais. Usado em rituais da sociedade secreta Ekpe. Sinais principais: dois círculos entrelaçados = amor/casamento. Espirais opostas = discurso/palavra. Linha com pontos = caminho/jornada. Cruz em X = conflito/guerra. Precursor do Anaforuana (Cuba) e pontos riscados (Brasil). Saki Mafundikwa documentou o sistema em 2004." },
+  { nome:"Sona", tradicao:"Lunda / Chokwe / Angola / Zâmbia", descricao:"Desenhos sagrados traçados na areia durante iniciações masculinas (mukanda). Cada lusona (singular) conta um mito ou ensinamento. Técnica: pontos fixos (malamba) + linha contínua que nunca se repete. Descoberto por Paulus Gerdes como sistema matemático sofisticado (grafos, fractais). Exemplos de temas: a perseguição do antílope, a teia da aranha, o caminho do sol." },
+  { nome:"Tifinagh / Neo-Tifinagh", tradicao:"Tuareg / Berbere / Saara / Norte África", descricao:"Alfabeto dos povos amazigh (berberes) com 3.000 anos de história. 55 letras básicas geométricas. Neo-Tifinagh adotado oficialmente no Marrocos em 2003. Exemplos: 'ⴰ' (Ya), 'ⴱ' (Yab), 'ⵜⴰⵎⴰⵣⵉⵖⵜ' (Tamaziɣt) = língua berbere. 'ⴰⵔⵎⴰⵡ' (Armaw) = escrita." },
+  { nome:"Vai", tradicao:"Vai / Libéria / Serra Leoa", descricao:"Sílabário criado por Momolu Duwalu Bukele em 1833 — uma das poucas escritas africanas indígenas modernas. 200+ silabogramas. Criado a partir de sonho revelador. Usado para comércio e correspondência. Uma das primeiras provas de que africanos criaram sistemas de escrita independentes no período colonial." },
+  { nome:"Bamum / Shu Mom", tradicao:"Bamum / Camarões", descricao:"Escrita criada pelo sultão Ibrahim Njoya do povo Bamum (Camarões) em 1896. Começou como pictográfica, evoluiu para silabária. Usada para registrar história, medicina e tradições." }
+],
 
-            let html = `<div class="info">📂 ${data.total} item(s) em "${data.categoria}"</div>`;
-            data.dados.forEach(item => {
-                html += criarCard({ categoria: data.categoria, ...item });
-            });
-            container.innerHTML = html;
-        }
+autores: [
+  { nome:"Beatriz Nascimento", tradicao:"Brasil / Rio de Janeiro (1942–1995)", descricao:"Historiadora, poeta e ativista negra. Desenvolveu o conceito de quilombo como 'território do corpo negro' — o quilombo não é só espaço físico, mas modo de ser e resistir. Pioneira nos estudos da diáspora africana no Brasil. Assassinada em 1995 ao defender uma amiga de violência doméstica. Obra principal: 'Eu Sou Atlântica' (org. postuma, 2006). Documentário: 'Ori' (Raquel Gerber, 1989).", extra:"Conceito central: 'O Quilombo como modo de vida' — o corpo negro como território da liberdade." },
+  { nome:"Bunseki Fu-Kiau", tradicao:"RDC / Kongo (1934–2012)", descricao:"Filósofo, curandeiro e sábio kongo. Guardião do conhecimento cosmológico bakongo. Sistematizou o Dikenga/Cosmograma Bakongo e o conceito de Kalunga. Fundou o Centro de Pesquisas Culturais de Kinshasa. Obra principal: 'African Cosmology of the Bântu-Kôngo' (2001). Também: 'N'Kongo Ye Nza Yakun'zungidila'.", extra:"Chave de leitura: Fu-Kiau é essencial para compreender o Candomblé Angola — suas obras são base para Lopes, Simas e Rufino." },
+  { nome:"Carl Gustav Jung", tradicao:"Suíça / Psiquiatria (1875–1961)", descricao:"Fundador da Psicologia Analítica. Cunhou os conceitos de arquétipo, inconsciente coletivo, anima/animus, sombra e individuação. Viajou à África em 1925 e reconheceu que culturas africanas tinham sistemas simbólicos equivalentes à psicologia profunda. Obras: 'O Homem e seus Símbolos' (1964), 'Psicologia e Alquimia', 'Tipos Psicológicos'.", extra:"Conexão: Os arquétipos de Jung encontram correspondência nos orixás, inkices e voduns. Pesquisadores como Monique Augras aplicaram Jung ao Candomblé." },
+  { nome:"Claude Lepine", tradicao:"Brasil / Antropologia", descricao:"Antropólogo francês radicado no Brasil. Especialista em Candomblé Ketu. Aplicou análise estrutural (Lévi-Strauss) e psicanalítica (Jung) ao sistema dos orixás. Obra: 'O inconsciente na umbanda' e 'Análise formal do panteão nagô'. Pioneiro na análise simbólica do Candomblé como sistema de classificação social.", extra:"Chave: Lepine mostrou que os orixás formam um sistema classificatório completo da experiência humana." },
+  { nome:"Édouard Glissant", tradicao:"Martinica / Caribe (1928–2011)", descricao:"Filósofo e poeta, teórico da 'Poética da Relação' e da 'Crioulização'. Desenvolveu o conceito de Atlântico como espaço de criação cultural e trauma fundador. 'Não há identidade sem alteridade.' Obras: 'Poética da Relação' (1990), 'Introdução a uma Poética da Diversidade', 'Discurso Antilhano'. Criou o conceito de 'opacidade' como direito à diferença não-explicável.", extra:"Conceito chave: Relação = nenhuma cultura existe isolada. A diáspora criou culturas de síntese (Candomblé, Vodu, Reggae)." },
+  { nome:"Frantz Fanon", tradicao:"Martinica / Argélia (1925–1961)", descricao:"Psiquiatra, filósofo e revolucionário. Analisou o impacto psicológico do colonialismo no colonizado e no colonizador. Fundamental para compreender o trauma da diáspora africana e a construção da identidade negra. Obras: 'Pele Negra, Máscaras Brancas' (1952), 'Os Condenados da Terra' (1961). Prefácio de Sartre.", extra:"Para as religiões afro: Fanon ajuda a entender por que o Candomblé foi criminalizado — o colonizador nega a humanidade do colonizado via sua religiosidade." },
+  { nome:"Gaston Bachelard", tradicao:"França / Filosofia (1884–1962)", descricao:"Filósofo da imaginação material e do devaneio poético. Analisou os quatro elementos (fogo, água, terra, ar) como fundamentos do imaginário humano. Obras: 'A Psicanálise do Fogo' (1938), 'A Água e os Sonhos' (1942), 'A Terra e os Devaneios do Repouso' (1948), 'O Ar e os Sonhos' (1943). Conceitos: Complexo de Prometeu (roubo do fogo), Complexo de Empédocles.", extra:"Conexão: O Fogo de Xangô, a Água de Iemanjá, a Terra de Nanã — Bachelard fornece vocabulário filosófico para os elementos dos orixás." },
+  { nome:"Gilbert Durand", tradicao:"França / Antropologia do Imaginário (1921–2012)", descricao:"Antropólogo e filósofo. Criou a teoria do imaginário como estrutura universal do pensamento humano. Obra: 'As Estruturas Antropológicas do Imaginário' (1960). Dividiu o imaginário em dois 'regimes': Diurno (heroico, separação, luta) e Noturno (sintético, cíclico, intimidade). Fundou o CNRS/Centre de Recherches sur l'Imaginaire.", extra:"Para cosmologias africanas: o 'regime noturno' de Durand — ciclicidade, intimidade com a morte, ancestrais — descreve perfeitamente a cosmovisão bantu." },
+  { nome:"Amadou Hampâté Bâ", tradicao:"Mali / Fula (1901–1991)", descricao:"Escritor, etnólogo e diplomata maliano. Guardião da tradição oral africana. Cunhou a frase imortal: 'Na África, quando um velho morre, é uma biblioteca que arde.' Obra: 'Amkoullel, o menino fula' (autobiografia), 'A Palavra, a Memória e o Clima', 'Aspectos da Civilização Africana'. Defendeu o respeito absoluto pela tradição oral na Unesco.", extra:"Fundamental para entender por que os terreiros de Candomblé são repositórios vivos de conhecimento — não 'religião primitiva'." },
+  { nome:"Janaína Figueiredo", tradicao:"Brasil / Jornalismo e Pesquisa", descricao:"Jornalista e pesquisadora brasileira especializada em Candomblé Angola e cultura bantu. Obra: 'Candomblé Angola — Nação Kassanje' (2006, Pallas). Uma das primeiras sistematizações do Candomblé Angola com foco nos Inkices. Pesquisou in loco em Angola e RDC.", extra:"Essencial para o estudo dos Inkices — obra de referência para o Candomblé Angola no Brasil." },
+  { nome:"Janheinz Jahn", tradicao:"Alemanha / Africanologia (1918–1973)", descricao:"Escritor e crítico literário alemão, pioneiro no estudo das culturas africanas e afro-americanas. Obra: 'Muntu: As culturas neoafricanas' (1958) — analisou o conceito bantu de Ntu como força vital universal presente na diáspora. Também: 'Bibliographie des néo-africains', 'Geschichte der neoafrikanischen Literatur'.", extra:"Conceito chave: 'Neoafricano' — as culturas da diáspora (Candomblé, Vodu, Jazz, Reggae) são continuações criativas da África, não deformações." },
+  { nome:"John S. Mbiti", tradicao:"Quênia / Teologia (1931–2019)", descricao:"Teólogo e filósofo queniano. Sistematizou os conceitos africanos de tempo, Deus e religião. Introduziu a distinção Zamani (passado mítico coletivo) / Sasa (presente vivido) que revolucionou a compreensão do tempo africano como não-linear. Obras: 'African Religions and Philosophy' (1969), 'Concepts of God in Africa'.", extra:"Chave de leitura: O tempo africano é essencialmente PASSADO — o futuro não existe, só o que foi e o que é." },
+  { nome:"Joseph Campbell", tradicao:"EUA / Mitologia Comparada (1904–1987)", descricao:"Mitólogo e escritor. Desenvolveu o conceito de 'Herói de Mil Faces' — a jornada heroica universal presente em todos os mitos. Obra: 'O Herói de Mil Faces' (1949), 'As Máscaras de Deus' (4 vol.), 'O Poder do Mito' (entrevistas com Bill Moyers). Seguidor de Jung. Frase famosa: 'Siga seu deleite' (Follow your bliss).", extra:"Para as cosmologias africanas: Campbell analisou mitos africanos e reconheceu a mesma estrutura universal da jornada heroica nos orixás." },
+  { nome:"Juana Elbein dos Santos", tradicao:"Brasil / Argentina (1925–2018)", descricao:"Antropóloga e artista. Viveu e foi iniciada no Candomblé Nagô da Bahia por Mãe Senhora. Doutora pela Sorbonne. Obra: 'Os Nagô e a Morte' (1975) — tese doutoral que sistematizou a teologia nagô a partir de dentro. Fundou o INTECAB (Instituto Nacional da Tradição e Cultura Afro-Brasileira).", extra:"Uma das mais importantes obras sobre teologia do Candomblé. Metodologia: emic (de dentro da tradição)." },
+  { nome:"Kabengele Munanga", tradicao:"RDC / Brasil / Antropologia", descricao:"Antropólogo congolês radicado no Brasil. Professor titular da USP. Especialista em racismo, identidade negra e culturas africanas. Obras: 'Negritude: Usos e sentidos' (1986), 'Rediscutindo a mestiçagem no Brasil', 'Uma Abordagem Conceitual das Noções de Raça, Racismo, Identidade e Etnia'.", extra:"Fundamental para compreender como as religiões afro-brasileiras foram usadas como ferramentas de afirmação identitária negra no Brasil." },
+  { nome:"Leda Maria Martins", tradicao:"Brasil / Literatura e Perfomance", descricao:"Professora da UFMG. Pesquisadora das performances negras, da memória corporal e das culturas afro-brasileiras. Desenvolveu os conceitos de 'oralitura' (literatura oral africana) e 'grafia do tempo no corpo'. Obras: 'Afrografias da Memória', 'Performances do Tempo Espiralar', 'A Cena em Sombras'.", extra:"Conceito chave: o corpo negro porta memória cultural — dançar no Candomblé é ato político e filosófico de preservação de saber." },
+  { nome:"Luiz Antonio Simas", tradicao:"Brasil / Rio de Janeiro / História", descricao:"Historiador, cronista e pesquisador da cultura popular carioca. Especialista em Candomblé, umbanda, carnaval e macumbas. Obras: 'Fogo no Mato: A Ciência Encantada das Macumbas' (com Luiz Rufino, 2018), 'O Corpo Encantado das Ruas', 'Pedrinhas Miudinhas', 'Dicionário da História Social do Samba'.", extra:"Chave: Simas defende que o Candomblé é uma 'ciência encantada' — sistema de conhecimento tão sofisticado quanto qualquer epistemologia ocidental." },
+  { nome:"Luiz Rufino", tradicao:"Brasil / Rio de Janeiro / Educação", descricao:"Pesquisador, escritor e educador. Especialista em cosmovisão bantu-iorubá e educação decolonial. Obras: 'Fogo no Mato' (com Simas, 2018), 'Pedagogia das Encruzilhadas' (2019), 'Exu e a Pedagogia das Encruzilhadas'. Usa Exu como metáfora pedagógica da educação que abre caminhos.", extra:"Conceito chave: Exu como 'epistemologia da encruzilhada' — pensar nos cruzamentos, não nas certezas." },
+  { nome:"Mircea Eliade", tradicao:"Romênia / História das Religiões (1907–1986)", descricao:"Historiador das religiões. Desenvolveu os conceitos de 'sagrado e profano', 'tempo mítico', 'hierofania' (manifestação do sagrado) e 'eterno retorno'. Obras: 'O Sagrado e o Profano' (1957), 'O Mito do Eterno Retorno' (1949), 'Tratado de História das Religiões', 'O Xamanismo'. Chefe do Departamento de Religiões da Universidade de Chicago.", extra:"Para o Candomblé: Eliade ajuda a entender por que o tempo ritual não é 'comemoração' mas ATUALIZAÇÃO — o mito acontece no presente." },
+  { nome:"Muniz Sodré", tradicao:"Brasil / Bahia / Comunicação e Filosofia", descricao:"Intelectual, professor e escritor baiano. Professor emérito da UFRJ. Analisou o Candomblé como 'forma de vida' e sistema filosófico negro. Obras: 'O Terreiro e a Cidade' (1988), 'A Verdade Seduzida' (1983), 'Reinventando a Cultura', 'Pensar Nagô' (2017).", extra:"Conceito chave: o terreiro de Candomblé é um 'contra-dispositivo' — organiza o espaço, o tempo e o corpo de modo radicalmente diferente da cidade colonial." },
+  { nome:"Nei Lopes", tradicao:"Brasil / Rio de Janeiro / Pesquisa e Música", descricao:"Escritor, compositor (sambas célebres), pesquisador e lexicógrafo da diáspora africana. Autor da maior obra de referência afro-brasileira. Obras: 'Bantos, Malês e Identidade Negra' (1988), 'Enciclopédia Brasileira da Diáspora Africana' (2004), 'Kitábu — O Livro do Saber e do Espírito Negro-Africanos', 'Novo Dicionário Banto do Brasil'.", extra:"Obra indispensável: a Enciclopédia de Nei Lopes é o maior dicionário afro-brasileiro existente — 5.000+ verbetes." },
+  { nome:"Paulus Gerdes", tradicao:"Holanda / Moçambique / Matemática (1952–2014)", descricao:"Matemático holandês radicado em Moçambique. Descobriu a geometria africana em cestarias, arquitectura, penteados e Sona. Fundou e dirigiu a Academia de Ciências de Moçambique. Obras: 'Geometry from Africa: Mathematical and Educational Explorations' (1999), 'African Fractals', 'Sona Geometry'.", extra:"Revolucionou a visão da matemática africana: as cestarias bantu e os Sona chokwe encorporam fractais, teoria dos grafos e topologia." },
+  { nome:"Pierre Verger", tradicao:"França / Brasil / Fotografia e Etnografia (1902–1996)", descricao:"Fotógrafo e babalaô. Viveu 50 anos no Brasil e na Nigéria documentando o Candomblé e as religiões iorubás. Iniciado como Fatumbi por Ibikunle. Obras: 'Notes sur le Culte des Orisa et Vodun' (1957), 'Orixás: Deuses Iorubás na África e no Novo Mundo' (1981), 'Fluxo e Refluxo' (1968).", extra:"Fundamental: Verger provou os laços vivos entre o Candomblé brasileiro e as religiões iorubás da Nigéria/Benin — a tradição foi preservada com fidelidade notável." },
+  { nome:"Robert Farris Thompson", tradicao:"EUA / História da Arte (1932–2021)", descricao:"Historiador da arte africana e afro-americana. Professor de Yale por décadas. Obras: 'Flash of the Spirit: African and Afro-American Art and Philosophy' (1983), 'Face of the Gods', 'Tango: The Art History of Love'. Analisou como a filosofia africana (Dikenga, Asé, Nsibidi) sobreviveu nas artes visuais da diáspora.", extra:"Chave: Thompson mostrou que o Candomblé, o Jazz e o Break Dance são manifestações do mesmo espírito filosófico africano." },
+  { nome:"Théophile Obenga", tradicao:"Gabão / Congo / Linguística (1936–)", descricao:"Historiador, linguista e filósofo. Colaborador próximo de Cheikh Anta Diop. Provou a continuidade linguística entre o Egito Antigo e as línguas bantu. Obras: 'La philosophie africaine de la période pharaonique' (1990), 'L'Égypte, la Grèce et l'école d'Alexandrie', 'Origine commune de l'égyptien ancien, du copte et des langues négro-africaines modernes'.", extra:"Fundamental: Obenga provou que o médu-neter (hieróglifos) tem raízes em línguas bantu — conectando o Egito ao restante da África." },
+  { nome:"Yeda Pessoa de Castro", tradicao:"Brasil / Bahia / Linguística (1929–2016)", descricao:"Linguista e pesquisadora baiana. Pioneira no estudo das línguas africanas no Candomblé e no português afro-brasileiro. Obras: 'Falares Africanos na Bahia: Um Vocabulário Afro-Brasileiro' (2001), 'A Língua Mina-Jeje no Brasil', 'Escravos e Libertos nas Cartas de Alforria'. Documentou o vocabulário litúrgico africano preservado nos terreiros.", extra:"Obra única: mapeou como o Yoruba, o Fon e o Bantu sobreviveram dentro do Candomblé baiano como 'línguas secretas'." },
+  { nome:"Cheikh Anta Diop", tradicao:"Senegal / Física e História (1923–1986)", descricao:"Historiador, físico nuclear e político senegalês. A maior revolução acadêmica africana do século XX. Provou com análise química de melanina em múmias e análise linguística que os egípcios antigos eram africanos negros. Obras: 'Nations Nègres et Culture' (1954), 'L'Afrique Noire Pré-Coloniale', 'Antériorité des Civilisations Nègres', 'Civilisation ou Barbarie'. Fundou o laboratório de datação por radiocarbono do IFAN (Dakar).", extra:"A tese de Diop: o Egito Antigo foi criado por africanos negros — o que muda toda a história da humanidade e a relação entre África e civilização." },
+  { nome:"Juana Elbein dos Santos", tradicao:"Brasil / Argentina (1925–2018)", descricao:"Antropóloga e artista. Viveu e foi iniciada no Candomblé Nagô. Doutora pela Sorbonne. Obra: 'Os Nagô e a Morte' (1975). Fundou o INTECAB." },
+  { nome:"Gaston Bachelard", tradicao:"França (1884–1962)", descricao:"Filósofo da imaginação material. Obras: 'A Psicanálise do Fogo', 'A Água e os Sonhos', 'A Terra e os Devaneios do Repouso'." }
+],
 
-        function criarCard(item) {
-            return `
-                <div class="card">
-                    <h3>${item.nome}</h3>
-                    <div class="tradicao">📍 ${item.tradicao}</div>
-                    <div class="descricao">${item.descricao}</div>
-                    <span class="categoria-tag">${item.categoria || 'Resultado'}</span>
-                </div>
-            `;
-        }
+arquetipos: [
+  { nome:"Fogo", tradicao:"Universal / Candomblé / Alquimia", descricao:"Arquétipo da transformação ativa. Elemento de Xangô, Ogum e Zaze (Angola). Purificação, paixão, criatividade e destruição. Para Bachelard: o primeiro objeto de devaneio humano. Complexo de Prometeu (roubo do fogo para os humanos) e de Empédocles (mergulho no fogo para compreendê-lo)." },
+  { nome:"Água", tradicao:"Universal / Candomblé / Bantu", descricao:"Arquétipo do inconsciente, da origem e da renovação. Domínio de Iemanjá (mar), Oxum (rio), Nanã (lama primordial). Kalunga (bantu): o mar como fronteira entre mundos. Para Bachelard: 'a água é o olhar da terra'." },
+  { nome:"Serpente", tradicao:"Universal / Yoruba / Egito / Hinduísmo", descricao:"Arquétipo da transformação pelo despojamento. Oxumaré/Angorô (arco-íris serpentiforme), Uraeus (Egito), Kundalini (Hinduísmo), Dan (Fon). Ciclo de morte e renascimento no mesmo corpo." },
+  { nome:"Tambor / Ngoma", tradicao:"Universal / Candomblé / Bantu", descricao:"Arquétipo da convocação e da sincronização. Atabaques (Rum, Rumpi, Lé) convocam os Orixás. Ngoma (Bantu) como presença ancestral. O tambor sincroniza corações, corpos e mundos." },
+  { nome:"Travessia / Passagem", tradicao:"Universal / Bantu / Diáspora", descricao:"Arquétipo da passagem que transforma. Kalunga como fronteira. O Atlântico Negro como maior travessia forçada. O porão do navio. A iniciação como travessia simbólica da morte para o renascimento." },
+  { nome:"Ancestral", tradicao:"Universal / Bantu / Candomblé", descricao:"Arquétipo da origem viva. Não é o passado morto — é o passado que continua agindo no presente. Egunguns, Pretos Velhos, Mifu (Bantu). Raiz que impede a árvore de cair." },
+  { nome:"Árvore / Axis Mundi", tradicao:"Universal / Yoruba / Nórdico / Bíblia", descricao:"Arquétipo do eixo do mundo. Iroko (Candomblé), Gameleira Branca (Umbanda), Jurema (Nordeste), Yggdrasil (Nórdico), Figueira de Bodhi (Budismo). Une raízes (ancestrais), tronco (vivos) e galhos (céus)." },
+  { nome:"Caçador / Arqueiro", tradicao:"Universal / Yoruba / Grécia", descricao:"Arquétipo da busca precisa. Oxóssi (Candomblé), Mutakalambô (Angola), Ártemis (Grécia). Concentração, paciência e estratégia. Não mata por crueldade — caça por necessidade e por fartura." },
+  { nome:"Caminho / Via", tradicao:"Universal / Yoruba / Budismo / Taoísmo", descricao:"Arquétipo do movimento com sentido. Exu/Aluvaiá (Candomblé), Dharma (Hinduísmo), Tao (Taoísmo). Não é o destino — é o próprio ser em movimento." },
+  { nome:"Cruz / Encruzilhada", tradicao:"Universal / Bakongo / Egito / Candomblé", descricao:"Arquétipo do encontro de forças opostas. Dikenga/Yowa (Bakongo), Ankh (Egito), Ponto de Exu. Vertical (céu) encontra horizontal (terra). Centro onde tudo se decide." },
+  { nome:"Sol", tradicao:"Universal / Egito / Candomblé / Bantu", descricao:"Arquétipo da consciência e da vida. Rá (Egito), Oxalá/Obatala (Candomblé), Nzambi (Bantu), Loko (Angola). Fonte primeira de energia vital. O ciclo solar como modelo de toda renovação." },
+  { nome:"Lua", tradicao:"Universal / Candomblé / Bantu", descricao:"Arquétipo da transformação cíclica. Regula rituais, plantio e ciclos do corpo. Iemanjá e Nanã têm ligação com ciclos lunares. Na cosmologia bantu (ngonda), marca meses e purificações." },
+  { nome:"Máscara", tradicao:"Universal / África / Candomblé / Japão", descricao:"Arquétipo da transformação de identidade. As máscaras africanas (Mukixi chokwe, Egungun iorubá, Pwo bantu) não são disfarces — são corpos de espíritos. Quem veste a máscara deixa de ser quem era." },
+  { nome:"Pedra / Otá", tradicao:"Universal / Candomblé / Bantu", descricao:"Arquétipo da firmeza e permanência. Otás (Candomblé) — morada física dos orixás. Na tradição bantu, pedras guardam o espírito dos ancestrais." },
+  { nome:"Vento", tradicao:"Universal / Candomblé / Bantu", descricao:"Arquétipo da liberdade e presença espiritual. Iansã/Oyá, Kitembu e Matamba (Angola). Muema (Bantu) = sopro vital de Nzambi. Carrega mensagens entre visível e invisível." },
+  { nome:"Terra / Ntoto", tradicao:"Universal / Candomblé / Bantu", descricao:"Arquétipo do corpo e da origem. Nanã Buruku (Candomblé), ntoto (Bantu). Corpo, sepultura e ventre. Recebe os mortos e dá origem aos vivos." },
+  { nome:"Porão do Navio", tradicao:"Diáspora Africana", descricao:"Arquétipo traumático e fundador. Espaço de confinamento nos navios negreiros. Ruptura forçada com a terra natal, mas também resistência e (re)criação de culturas. Beatriz Nascimento e Paul Gilroy analisaram esse espaço como origem do Atlântico Negro." },
+  { nome:"Espelho", tradicao:"Universal / Yoruba / Kemet", descricao:"Arquétipo do autoconhecimento e do limiar. Abebé (leque-espelho de Oxum). Na cosmologia bakongo, a água como espelho entre o mundo dos vivos e dos mortos." },
+  { nome:"Caveira / Ícone da Morte", tradicao:"Universal / Candomblé / Catolicismo", descricao:"Arquétipo do limiar entre vida e morte. Exu Caveira (Umbanda), Omolu/Kavungo. Memento mori — a caveira não é morbidez, é convite ao vivir com intensidade." },
+  { nome:"Semente", tradicao:"Universal / Bantu / Yoruba", descricao:"Arquétipo do potencial dormente e da ressurreição. O Odu de Ifá lançado como semente. O orixá que 'dorme' na pedra até ser despertado pelo ritual. O ancestral que retorna no filho." },
+  { nome:"Porão / Casa / Terreiro", tradicao:"Universal / Candomblé / Bantu", descricao:"Arquétipo da proteção e memória sagrada. Terreiro como microcosmo que replica a ordem do universo. Nzo a bakulu (Bantu) — casa dos ancestrais. O espaço sagrado que protege e transforma." }
+],
 
-        // Pesquisar ao pressionar Enter
-        document.getElementById('termo').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') pesquisar();
-        });
-    </script>
+livros: [
+  { nome:"Nations nègres et culture", tradicao:"Cheikh Anta Diop (1954)", descricao:"Tese fundadora sobre a origem africana dos egípcios e a continuidade cultural entre África negra e Egito antigo." },
+  { nome:"La philosophie bantoue", tradicao:"Placide Tempels (1945)", descricao:"Sistematização da filosofia bantu através do conceito de Força Vital (Ntu)." },
+  { nome:"African Religions and Philosophy", tradicao:"John S. Mbiti (1969)", descricao:"Conceitos africanos de tempo, Deus e religião. Introduziu Zamani e Sasa." },
+  { nome:"O Homem e seus Símbolos", tradicao:"Carl Gustav Jung (1964)", descricao:"Última obra de Jung sobre arquétipos, sonhos e inconsciente coletivo. Acessível ao público geral." },
+  { nome:"A Psicanálise do Fogo", tradicao:"Gaston Bachelard (1938)", descricao:"O fogo como primeiro objeto de devaneio humano. Complexo de Prometeu." },
+  { nome:"A Água e os Sonhos", tradicao:"Gaston Bachelard (1942)", descricao:"Água como imaginação material do devaneio." },
+  { nome:"As Estruturas Antropológicas do Imaginário", tradicao:"Gilbert Durand (1960)", descricao:"Tipologia dos símbolos universais. Regimes Diurno e Noturno." },
+  { nome:"African Cosmology of the Bântu-Kôngo", tradicao:"Bunseki Fu-Kiau (2001)", descricao:"Cosmologia, religião e filosofia do povo Kongo. Base essencial para o Candomblé Angola." },
+  { nome:"Flash of the Spirit", tradicao:"Robert Farris Thompson (1983)", descricao:"Arte e filosofia africana nas Américas. Dikenga, Asé e Nsibidi na diáspora." },
+  { nome:"Os Nagô e a Morte", tradicao:"Juana Elbein dos Santos (1975)", descricao:"Teologia do Candomblé Nagô a partir de dentro da tradição. Doutoral pela Sorbonne." },
+  { nome:"Candomblé Angola — Nação Kassanje", tradicao:"Janaína Figueiredo (2006)", descricao:"Primeira sistematização dos Inkices com pesquisa em Angola e RDC. Editora Pallas." },
+  { nome:"Muntu: As culturas neoafricanas", tradicao:"Janheinz Jahn (1958)", descricao:"O conceito bantu de Ntu como chave das culturas afro-diaspóricas." },
+  { nome:"Fogo no Mato: A Ciência Encantada das Macumbas", tradicao:"Simas & Rufino (2018)", descricao:"O Candomblé e a Umbanda como sistemas de conhecimento sofisticados." },
+  { nome:"Pedagogia das Encruzilhadas", tradicao:"Luiz Rufino (2019)", descricao:"Exu como metáfora da educação decolonial." },
+  { nome:"Pensar Nagô", tradicao:"Muniz Sodré (2017)", descricao:"O terreiro de Candomblé como forma de vida e contra-dispositivo colonial." },
+  { nome:"Enciclopédia Brasileira da Diáspora Africana", tradicao:"Nei Lopes (2004)", descricao:"5.000+ verbetes. A maior obra de referência afro-brasileira." },
+  { nome:"Falares Africanos na Bahia", tradicao:"Yeda Pessoa de Castro (2001)", descricao:"Vocabulário afro-brasileiro. Como Yoruba, Fon e Bantu sobreviveram nos terreiros." },
+  { nome:"Eu Sou Atlântica", tradicao:"Beatriz Nascimento (org. postuma, 2006)", descricao:"O quilombo como território do corpo negro e modo de vida." },
+  { nome:"Poética da Relação", tradicao:"Édouard Glissant (1990)", descricao:"A diáspora como espaço de criação cultural. Identidade como relação, não essência." },
+  { nome:"Pele Negra, Máscaras Brancas", tradicao:"Frantz Fanon (1952)", descricao:"O impacto psicológico do colonialismo. Fundamental para compreender o trauma da diáspora." },
+  { nome:"O Herói de Mil Faces", tradicao:"Joseph Campbell (1949)", descricao:"A jornada heroica universal presente em todos os mitos, incluindo os orixás." },
+  { nome:"O Sagrado e o Profano", tradicao:"Mircea Eliade (1957)", descricao:"Hierofania, tempo mítico e o retorno ao tempo das origens nos rituais." },
+  { nome:"Afrografias da Memória", tradicao:"Leda Maria Martins", descricao:"Oralitura e memória corporal nas performances negras." },
+  { nome:"Geometry from Africa", tradicao:"Paulus Gerdes (1999)", descricao:"Fractais e geometria nos Sona chokwe, cestarias bantu e arquitectura africana." }
+]
+
+}; // fim TEXT_DATA
+
+/* ═══ ATLAS VISUAL ═══ */
+const TRAD_COLORS = {
+  "Bantu":   {bg:"#0d1f17", dot:"#1D9E75"},
+  "Iorubá":  {bg:"#110f2e", dot:"#7F77DD"},
+  "Jeje":    {bg:"#1f0d08", dot:"#D85A30"},
+  "Ketu":    {bg:"#1f0a12", dot:"#D4537E"},
+  "Inkices": {bg:"#0f1a07", dot:"#639922"},
+  "Kemet":   {bg:"#1f1508", dot:"#BA7517"},
+  "Maat":    {bg:"#1f0808", dot:"#E24B4A"},
+  "Nsibidi": {bg:"#07111f", dot:"#378ADD"},
+  "Umbanda": {bg:"#1a0f1f", dot:"#9B59B6"},
+  "Jurema":  {bg:"#0f1a0f", dot:"#27AE60"}
+};
+
+const ATLAS = [
+  {id:1, trad:"Bantu", nome:"Mpemba / Dikenga — Cruz Cósmica", origem:"Bakongo, Congo-Angola",
+   tag:"Cosmograma", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Cosmogram.svg/400px-Cosmogram.svg.png",
+   def:"O Dikenga (Yowa) representa o ciclo completo da existência: Musoni (leste/nascimento), Kala (zênite/vida plena), Tukula (oeste/morte/transição), Luvemba (nadir/ressurreição ancestral). A linha horizontal divide vivos (cima) de mortos (baixo); a vertical conecta sagrado e profano. Fu-Kiau: 'a teoria do ser bakongo — não decoração, mas mapa ontológico'.",
+   cite:"Fu-Kiau, K.K.B. African Cosmology of the Bântu-Kôngo. 2001."},
+
+  {id:2, trad:"Bantu", nome:"Nkisi — Força Espiritual", origem:"Bakongo / Candomblé Angola",
+   tag:"Ontologia", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Kongo_nail_fetish.jpg/300px-Kongo_nail_fetish.jpg",
+   def:"Nkisi designa simultaneamente divindade, espírito, força vital e o invólucro material. Os minkisi são 'agentes de transformação' — concentrados de força divina que podem ser ativados pelo nganga (especialista ritual). No Brasil, reconfigurados no Candomblé Angola como Kavungo, Lemba, Mukumbi e outros Inkices.",
+   cite:"MacGaffey, W. Art and Healing of the Bakongo. 1991."},
+
+  {id:3, trad:"Bantu", nome:"Adinkra — Sankofa", origem:"Akan / Gana / Costa do Marfim",
+   tag:"Adinkra", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Adinkra_symbols.svg/400px-Adinkra_symbols.svg.png",
+   def:"Sankofa: 'Não é errado voltar atrás e apanhar o que ficou para trás.' O pássaro que vira a cabeça. Princípio do retorno ao passado para construir o futuro. Mbiti: o passado (Zamani) é fundamento do presente (Sasa), não obstáculo.",
+   cite:"Mbiti, J.S. African Religions and Philosophy. 1969."},
+
+  {id:4, trad:"Bantu", nome:"Sona — Geometria Chokwe", origem:"Chokwe/Lunda, Angola",
+   tag:"Matemática", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Sona_geometry.jpg/300px-Sona_geometry.jpg",
+   def:"Os Sona são ideogramas geométricos traçados na areia durante iniciações (mukanda) pelos akwa kuta sona (mestres dos desenhos). Cada lusona encapsula um mito. Paulus Gerdes demonstrou que os Sona constituem sistema matemático sofisticado antecipando grafos, redes e fractais.",
+   cite:"Gerdes, P. Geometry from Africa. MAA, 1999."},
+
+  {id:5, trad:"Iorubá", nome:"Odu Ifá — Ogbe Meji", origem:"Iorubá, Nigéria / Benin",
+   tag:"Oráculo", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Ifa_divination_tray.jpg/300px-Ifa_divination_tray.jpg",
+   def:"Ogbe Meji é o primeiro dos 256 Odu do corpus de Ifá. Cada Odu é arquivo mítico com narrativas (itàn), encantamentos (oríkì) e prescrições rituais. Ogbe Meji representa a luz primordial e a criação. Patrimônio Imaterial da Humanidade pela Unesco (2005).",
+   cite:"Bascom, W.R. Ifa Divination. Indiana UP, 1969."},
+
+  {id:6, trad:"Iorubá", nome:"Oxê Xangô — Machado Duplo", origem:"Iorubá / Candomblé Ketu",
+   tag:"Axé", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Shango_double_axe.jpg/300px-Shango_double_axe.jpg",
+   def:"O oxê é o machado duplo de Xangô. O formato bifronte simboliza dualidade: justiça e poder, misericórdia e rigor. Na iconografia iorubá, feito de osé (madeira sagrada) ou cobre. Verger documentou que o culto de Xangô veio da cidade de Oyó para o Brasil e Cuba.",
+   cite:"Verger, P. Notes sur le Culte des Orisa. IFAN, 1957."},
+
+  {id:7, trad:"Iorubá", nome:"Ilekê — Fios de Contas", origem:"Iorubá / Afro-brasileiro",
+   tag:"Insígnia", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Candomble_beads.jpg/300px-Candomble_beads.jpg",
+   def:"Os ilekê (contas sagradas) são marcadores de iniciação e identidade religiosa. Cada orixá possui combinação cromática específica: branco (Oxalá), azul/branco (Ogum), vermelho/branco (Xangô), dourado/amarelo (Oxum), azul claro/cristal (Iemanjá). Lody analisa como 'documentos corporais'.",
+   cite:"Lody, R. Candomblé: Religião e Resistência Cultural. Ática, 1987."},
+
+  {id:8, trad:"Jeje", nome:"Dan / Vodun — Serpente Arco-íris", origem:"Fon, Ewe / Daomé (Benim)",
+   tag:"Vodun", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Voodoo_flag_mermaid.jpg/300px-Voodoo_flag_mermaid.jpg",
+   def:"Dan (Dã) é o vodun serpente que representa movimento, continuidade e conexão entre mundos. Na cosmologia Fon/Ewe, sustenta a abóbada celeste. No Brasil, tornou-se Oxumaré no Candomblé Jeje-Nagô e Angorô no Angola.",
+   cite:"Herskovits, M.J. Dahomey. Northwestern UP, 1938."},
+
+  {id:9, trad:"Ketu", nome:"Orixá Oxum — Espelho Sagrado", origem:"Iorubá/Ketu, Nigéria / Brasil",
+   tag:"Orixá", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Oshun_shrine_Nigeria.jpg/300px-Oshun_shrine_Nigeria.jpg",
+   def:"Oxum é orixá das águas doces, amor e fertilidade. O espelho (abebé) é seu atributo — instrumento de autoconhecimento e comunicação com o sobrenatural. Bosque de Oxum em Oshogbo (Nigéria) é Patrimônio Mundial da Unesco desde 2005.",
+   cite:"Verger, P. Orixás. Corrupio, 1981."},
+
+  {id:10, trad:"Ketu", nome:"Ponto Riscado / Pemba", origem:"Umbanda / Candomblé Angola-Ketu",
+   tag:"Grafia Sagrada", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Umbanda_symbol.svg/300px-Umbanda_symbol.svg.png",
+   def:"Os pontos riscados são grafias rituais traçadas com pemba (giz sagrado) no chão dos terreiros para invocar e comunicar com entidades espirituais. Cada entidade possui ponto exclusivo, funcionando como assinatura e portal. Simas & Rufino: 'epistemologia gráfica'.",
+   cite:"Simas, L.A.; Rufino, L. Fogo no Mato. Mórula, 2018."},
+
+  {id:11, trad:"Inkices", nome:"Máscara Mukixi — Mwana Pwo", origem:"Chokwe, Angola/Congo",
+   tag:"Máscara", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Tschokwe-Maske_%28Pwo%29.jpg/300px-Tschokwe-Maske_%28Pwo%29.jpg",
+   def:"O Mukixi (Mwana Pwo) é máscara iniciática masculina que representa o espírito ancestral feminino. Usada nas cerimônias de mukanda (iniciação masculina), incorpora a bisavó mítica e transmite sabedoria pela dança. No Candomblé Angola, o Mukangue tornou-se símbolo central dos Inkices.",
+   cite:"Bastin, M.L. Sculpture Tshokwe. Albin Michel, 1982."},
+
+  {id:12, trad:"Inkices", nome:"Kavungo / Omolu — Senhor da Doença e Cura", origem:"Bantu Angola / Candomblé Angola",
+   tag:"Inkice", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Obaluaye.jpg/300px-Obaluaye.jpg",
+   def:"Kavungo (Karunga) é o inkice da doença, cura e transição entre vida e morte — equivalente a Obaluaê/Omolu no Ketu. A etimologia bantu evoca 'grande mar' (kalunga) como fronteira. Coberto por palha de dendê (mariô), seu corpo invisível representa o mistério da transformação pela doença.",
+   cite:"Figueiredo, J. Candomblé Angola. Pallas, 2006."},
+
+  {id:13, trad:"Kemet", nome:"Ankh — Chave da Vida", origem:"Kemet (Egito Antigo)",
+   tag:"Hieróglifo", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Ankh.svg/300px-Ankh.svg.png",
+   def:"O ankh (☥) combina os ideogramas de sandália, nó e vida. Significa 'vida', 'existência', 'espelho' e 'proteção'. Atributo das divindades e faraós. Diop e Asante argumentam que a cruz cristã derivou do ankh.",
+   cite:"Diop, C.A. The African Origin of Civilization. 1974."},
+
+  {id:14, trad:"Kemet", nome:"Djed — Coluna de Osíris", origem:"Kemet / Período Dinástico",
+   tag:"Símbolo", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Djed_pillars.jpg/300px-Djed_pillars.jpg",
+   def:"O djed é símbolo kemético de estabilidade e ressurreição, associado a Ptah e Osíris. Imita a coluna vertebral de Osíris ou tronco de papiro amarrado. O levantamento ritual do djed no Festival de Sed simbolizava a ressurreição e renovação do poder real.",
+   cite:"Frankfort, H. Kingship and the Gods. Univ. of Chicago Press, 1948."},
+
+  {id:15, trad:"Maat", nome:"Pena de Ma'at — Julgamento Póstumo", origem:"Kemet / Período Novo Reino",
+   tag:"Maat", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Ma%27at.svg/300px-Ma%27at.svg.png",
+   def:"Ma'at é a divindade e o princípio filosófico-ético que representa ordem cósmica, verdade, justiça e equilíbrio. Sua pena é usada na psicostasia — o julgamento póstumo onde o coração do morto é pesado contra a pena de Ma'at na balança de Osíris. Fundamento da ética africana.",
+   cite:"Assmann, J. Ma'at: Gerechtigkeit und Unsterblichkeit. Beck, 1990."},
+
+  {id:16, trad:"Maat", nome:"Udjat / Olho de Hórus", origem:"Kemet / Sol e Proteção",
+   tag:"Kemet", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Eye_of_Horus_Right.svg/300px-Eye_of_Horus_Right.svg.png",
+   def:"O Udjat (Olho de Hórus) representa proteção, saúde e restauração. Narrativa mítica: o olho foi destruído por Set e restaurado por Thoth — metáfora da cura e da integridade recuperada. Usado em amuletos e como símbolo médico (as seis partes do olho representam frações matemáticas).",
+   cite:"Wilkinson, R.H. Symbol and Magic in Egyptian Art. Thames & Hudson, 1994."},
+
+  {id:17, trad:"Nsibidi", nome:"Nsibidi — Sinal de União/Amor", origem:"Ekpe/Ejagham, Nigéria/Camarões",
+   tag:"Escrita", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Nsibidi_love_sign.jpg/300px-Nsibidi_love_sign.jpg",
+   def:"O Nsibidi é sistema de escrita ideográfica com 500+ sinais. Cada sinal codifica conceitos, situações jurídicas, estados emocionais ou mensagens rituais. O sinal de dois círculos entrecruzados representa amor e aliança. Precursor do Anaforuana (Cuba) e dos pontos riscados brasileiros.",
+   cite:"Mafundikwa, S. Afrikan Alphabets. Mark Batty Publisher, 2004."},
+
+  {id:18, trad:"Umbanda", nome:"Preto Velho — Pai Joaquim", origem:"Umbanda / Brasil",
+   tag:"Entidade", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Velho_Negro_Umbanda.jpg/300px-Velho_Negro_Umbanda.jpg",
+   def:"Os Pretos Velhos são espíritos de escravizados africanos que alcançaram a paz e a sabedoria. Trabalham com paciência, caridade e cura pelas ervas. Sentam em cadeiras baixas, fumam cachimbo, usam bengala. São a memória viva da resistência e do amor negro. Representam a síntese mais profunda entre o sofrimento histórico e a espiritualidade transformada.",
+   cite:"Simas, L.A. O Corpo Encantado das Ruas. Civilização Brasileira, 2019."},
+
+  {id:19, trad:"Umbanda", nome:"Pombagira — Maria Padilha", origem:"Umbanda / Brasil",
+   tag:"Entidade", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Pomba_Gira.jpg/300px-Pomba_Gira.jpg",
+   def:"As Pombagiras são entidades femininas da esquerda, companheiras dos Exus. Trabalham com amor, sexualidade, independência feminina e justiça. Maria Padilha é a mais conhecida. Vestem vermelho e preto, usam rosas, bebem champanhe. Símbolo da mulher livre, da sexualidade sagrada e do poder feminino não domesticado.",
+   cite:"Birman, P. O que é Umbanda. Brasiliense, 1983."},
+
+  {id:20, trad:"Jurema", nome:"Árvore de Jurema Sagrada", origem:"Jurema / Brasil / Nordeste",
+   tag:"Planta Sagrada", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Mimosa_tenuiflora.jpg/300px-Mimosa_tenuiflora.jpg",
+   def:"A Jurema (Mimosa tenuiflora / hostilis) é a planta sagrada central do Catimbó e da Jurema Sagrada nordestina. Seu vinho alucinógeno (feito do caule) permite comunicação com os encantados. A árvore como entidade: a Cabocla Jurema, princesa indígena encantada na planta.",
+   cite:"Assunção, L. O Reino dos Mestres: A Tradição da Jurema. EDUERJ, 2006."}
+];
+
+const CATEGORIAS = {
+  conceitos:    { icon:"💡", label:"Conceitos" },
+  divindades:   { icon:"👑", label:"Divindades" },
+  inkices:      { icon:"🪶", label:"Inkices" },
+  umbanda:      { icon:"⭐", label:"Umbanda" },
+  pajelanca:    { icon:"🌿", label:"Pajelança/Jurema" },
+  cosmogonias:  { icon:"🌌", label:"Cosmogonias" },
+  ritos:        { icon:"🪘", label:"Ritos" },
+  civilizacoes: { icon:"🏛️", label:"Civilizações" },
+  linguas:      { icon:"🗣️", label:"Línguas" },
+  escritas:     { icon:"✍️", label:"Escritas" },
+  autores:      { icon:"📖", label:"Autores" },
+  arquetipos:   { icon:"🔯", label:"Arquétipos" },
+  livros:       { icon:"📚", label:"Livros" }
+};
+
+const ALL_TAGS = [
+  "Bantu","Ubuntu","Mandombe","Dikenga","Maat","Sankofa","Kalunga","Asé","Nkisi","Aluvaiá",
+  "Matamba","Katendê","Zaze","Kavungo","Cheikh Anta Diop","Jung","Bachelard","Adinkra",
+  "Nsibidi","Sona","Ankh","Fogo","Água","Serpente","Preto Velho","Pombagira","Exu","Umbanda",
+  "Jurema","Caboclo","Oxum","Xangô","Iemanjá","Candomblé","Ifá","Yoruba","Kikongo","Kimbundo",
+  "Ge'ez","Hieróglifos","Orixá","Beatriz Nascimento","Fanon","Glissant","Hampâté Bâ","Campbell"
+];
+
+/* ═══ ESTADO ═══ */
+let currentView = "pesquisa";
+let atlasTradActive = "Todos";
+let atlasExpanded = null;
+const $ = id => document.getElementById(id);
+
+/* ═══ TAGS ═══ */
+document.getElementById("tags-container").innerHTML = ALL_TAGS.map(t =>
+  `<span class="tag" onclick="buscarTag('${t}')">${t}</span>`
+).join("");
+
+/* ═══ TABS ═══ */
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    currentView = t.dataset.view;
+    $("view-" + currentView).classList.add("active");
+  });
+});
+
+/* ═══ PESQUISA ═══ */
+function pesquisar() {
+  const termo = $("termo").value.trim().toLowerCase();
+  if (!termo) return;
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(x => x.classList.remove("active"));
+  document.querySelector('.tab[data-view="pesquisa"]').classList.add("active");
+  $("view-pesquisa").classList.add("active");
+
+  const resultados = [];
+  for (const categoria in TEXT_DATA) {
+    TEXT_DATA[categoria].forEach(item => {
+      const txt = (item.nome+item.tradicao+item.descricao+(item.extra||"")).toLowerCase();
+      if (txt.includes(termo)) resultados.push({ categoria, ...item });
+    });
+  }
+  ATLAS.forEach(a => {
+    const txt = (a.nome+a.origem+a.trad+a.def+a.cite+a.tag).toLowerCase();
+    if (txt.includes(termo)) {
+      resultados.push({ categoria:"atlas", ...a, tradicao:a.trad, descricao:a.def });
+    }
+  });
+
+  const out = $("resultados-pesquisa");
+  if (!resultados.length) {
+    out.innerHTML = `<div class="empty"><div class="big">⚠️</div><p>Nada encontrado para "<strong>${escHtml($("termo").value)}</strong>"<br><small>Tente outro termo ou explore as <a href="#" onclick="abrirCategorias(event)" style="color:var(--accent)">categorias</a></small></p></div>`;
+    return;
+  }
+  let html = `<div class="count-bar">📊 ${resultados.length} resultado(s) para "<strong>${escHtml($("termo").value)}</strong>"</div>`;
+  resultados.forEach(item => {
+    const cat = item.categoria;
+    const catLabel = cat === "atlas" ? "🎨 Atlas" : (CATEGORIAS[cat]?.label || cat);
+    html += `<div class="card-text">
+      <h3>${escHtml(item.nome)}</h3>
+      <div class="meta">📍 ${escHtml(item.tradicao||item.origem||"")}</div>
+      <div class="desc">${escHtml(item.descricao||item.def||"")}</div>
+      ${item.extra ? `<div class="extra">💡 ${escHtml(item.extra)}</div>` : ""}
+      <span class="badge">${catLabel}</span>
+    </div>`;
+  });
+  out.innerHTML = html;
+}
+
+function buscarTag(tag) { $("termo").value = tag; pesquisar(); }
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+$("termo").addEventListener("keypress", e => { if (e.key === "Enter") pesquisar(); });
+
+/* ═══ ATLAS ═══ */
+function buildAtlas() {
+  const trads = ["Todos", ...Object.keys(TRAD_COLORS)];
+  $("atlas-filters").innerHTML = trads.map(t =>
+    `<button class="filter-btn${t === atlasTradActive ? " active" : ""}" data-t="${t}">${t}</button>`
+  ).join("");
+  $("atlas-filters").querySelectorAll(".filter-btn").forEach(b => {
+    b.addEventListener("click", () => {
+      atlasTradActive = b.dataset.t; atlasExpanded = null; renderAtlas();
+      $("atlas-filters").querySelectorAll(".filter-btn").forEach(x =>
+        x.classList.toggle("active", x.dataset.t === atlasTradActive));
+    });
+  });
+  renderAtlas();
+}
+
+function renderAtlas() {
+  const filtered = atlasTradActive === "Todos" ? ATLAS : ATLAS.filter(d => d.trad === atlasTradActive);
+  $("atlas-count").textContent = `${filtered.length} símbolo(s)`;
+  $("atlas-grid").innerHTML = filtered.map(d => {
+    const col = TRAD_COLORS[d.trad] || {bg:"#111", dot:"#aaa"};
+    const isExp = atlasExpanded === d.id;
+    const imgEl = d.img
+      ? `<img src="${d.img}" alt="${escHtml(d.nome)}" loading="lazy" onerror="this.style.display='none'">`
+      : "";
+    return `<div class="card-v${isExp ? " expanded" : ""}" data-id="${d.id}">
+      <div class="img" style="background:${col.bg}">${imgEl}</div>
+      <div class="body">
+        <div class="tag2" style="color:${col.dot}">${d.trad} · ${d.tag}</div>
+        <div class="name">${escHtml(d.nome)}</div>
+        <div class="origin">${escHtml(d.origem)}</div>
+        <div class="detail">
+          <p class="def">${escHtml(d.def)}</p>
+          <p class="cite">${escHtml(d.cite)}</p>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+  $("atlas-grid").querySelectorAll(".card-v").forEach(c => {
+    c.addEventListener("click", () => {
+      const id = parseInt(c.dataset.id);
+      atlasExpanded = atlasExpanded === id ? null : id;
+      renderAtlas();
+    });
+  });
+}
+
+/* ═══ CATEGORIAS ═══ */
+function buildCategorias() {
+  $("cat-grid").innerHTML = Object.entries(CATEGORIAS).map(([key, info]) => {
+    const count = (TEXT_DATA[key] || []).length;
+    return `<div class="cat-card" data-cat="${key}">
+      <div class="icon">${info.icon}</div>
+      <div class="label">${info.label}</div>
+      <div class="count">${count} item${count !== 1 ? "s" : ""}</div>
+    </div>`;
+  }).join("");
+  $("cat-grid").querySelectorAll(".cat-card").forEach(c => {
+    c.addEventListener("click", () => {
+      const cat = c.dataset.cat;
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll(".view").forEach(x => x.classList.remove("active"));
+      document.querySelector('.tab[data-view="pesquisa"]').classList.add("active");
+      $("view-pesquisa").classList.add("active");
+      mostrarCategoria(cat);
+    });
+  });
+}
+
+function mostrarCategoria(cat) {
+  const items = TEXT_DATA[cat] || [];
+  const out = $("resultados-pesquisa");
+  if (!items.length) { out.innerHTML = `<div class="empty"><div class="big">📂</div><p>Categoria vazia</p></div>`; return; }
+  const info = CATEGORIAS[cat];
+  let html = `<div class="count-bar">📂 <strong>${info.label}</strong> · ${items.length} item(s)</div>`;
+  items.forEach(item => {
+    html += `<div class="card-text">
+      <h3>${escHtml(item.nome)}</h3>
+      <div class="meta">📍 ${escHtml(item.tradicao)}</div>
+      <div class="desc">${escHtml(item.descricao)}</div>
+      ${item.extra ? `<div class="extra">💡 ${escHtml(item.extra)}</div>` : ""}
+      <span class="badge">${info.label}</span>
+    </div>`;
+  });
+  out.innerHTML = html;
+}
+
+function abrirCategorias(e) {
+  e.preventDefault();
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(x => x.classList.remove("active"));
+  document.querySelector('.tab[data-view="categorias"]').classList.add("active");
+  $("view-categorias").classList.add("active");
+}
+
+buildAtlas();
+buildCategorias();
+</script>
 </body>
 </html>
